@@ -246,6 +246,10 @@
       <p>바이어코드 전용 검색, 협력사 스마트 필터링, 관리자 보안 인증 탑재</p>
     </div>
     <div class="header-actions">
+      <div class="stat-card" style="min-width:130px;">
+        <div class="label">데이터 동기화 상태</div>
+        <div class="value" id="syncStatusBadge" style="font-size:12px;font-weight:700;color:#0284c7;margin-top:4px;">확인 중...</div>
+      </div>
       <div class="stat-card"><div class="label">협력사 수</div><div class="value" id="statVendorCount">0</div></div>
       <div class="stat-card"><div class="label">총 품목 수 (코드기준)</div><div class="value" id="statProductCount">0</div></div>
     </div>
@@ -573,22 +577,100 @@
     });
   }
 
-  function loadData() {
-    const sv = localStorage.getItem(STORAGE_KEY_VENDORS);
-    const sp = localStorage.getItem(STORAGE_KEY_PRODUCTS);
-    if (sv && sp) {
-      try {
-        vendors = JSON.parse(sv);
-        products = JSON.parse(sp);
-      } catch(e) {
-        vendors = JSON.parse(JSON.stringify(defaultVendors));
-        products = JSON.parse(JSON.stringify(defaultProducts));
+  async function loadData() {
+    const badge = document.getElementById('syncStatusBadge');
+    if (badge) badge.innerHTML = '<span style="color:#0284c7;">🔄 동기화 중...</span>';
+
+    // 1. GitHub 저장소의 최신 data.csv 불러오기 시도 (캐시 방지 타임스탬프)
+    try {
+      const response = await fetch('data.csv?_t=' + Date.now(), { cache: 'no-store' });
+      if (response.ok) {
+        const csvText = await response.text();
+        const rows = parseRFC4180CSV(csvText);
+        if (rows && rows.length > 1) {
+          parseAndApplyServerRows(rows);
+          if (badge) badge.innerHTML = '<span style="color:#16a34a;">🟢 서버 최신 (data.csv)</span>';
+          return;
+        }
       }
-    } else {
-      vendors = JSON.parse(JSON.stringify(defaultVendors));
-      products = JSON.parse(JSON.stringify(defaultProducts));
-      saveData();
+    } catch (err) {
+      console.log('서버 data.csv 자동 로드 건너뜀 (로컬 파일 또는 네트워크 환경):', err.message);
     }
+
+    // 2. data.csv 가 없는 경우(오프라인 로컬 실행 등) 기본 내장 데이터 로드
+    vendors = JSON.parse(JSON.stringify(defaultVendors));
+    products = JSON.parse(JSON.stringify(defaultProducts));
+    rebuildVendorIndexes();
+    refreshUI();
+    if (badge) badge.innerHTML = '<span style="color:#64748b;">💾 기본 내장 데이터</span>';
+  }
+
+  // 서버 data.csv 파싱 및 전역 데이터 즉시 반영 함수
+  function parseAndApplyServerRows(rows) {
+    const firstRow = rows[0].map(c => String(c).replace(/["\s_]/g, '').toLowerCase());
+    let isHeader = false;
+    let colPCode = -1, colPName = -1, colBCode = -1, colVCode = -1, colVName = -1;
+
+    firstRow.forEach((col, idx) => {
+      if (/^(제품코드|품목코드|상품코드|코드|code)$/.test(col)) { colPCode = idx; isHeader = true; }
+      else if (/^(품목명|제품명|상품명|품명|name)$/.test(col)) { colPName = idx; isHeader = true; }
+      else if (/^(바이어코드|바이어|buyer|buyercode)$/.test(col)) { colBCode = idx; isHeader = true; }
+      else if (/^(협력사코드|업체코드|거래처코드|vendorcode)$/.test(col)) { colVCode = idx; isHeader = true; }
+      else if (/^(협력사명|업체명|거래처명|회사명|상호|vendorname)$/.test(col)) { colVName = idx; isHeader = true; }
+    });
+
+    if (!isHeader) {
+      if (rows[0].length >= 5) {
+        colPCode = 1; colPName = 2; colBCode = 3; colVCode = 4; colVName = 5;
+      } else if (rows[0].length === 4) {
+        colPCode = 0; colPName = 1; colVCode = 2; colVName = 3;
+      } else if (rows[0].length === 2) {
+        colPCode = 0; colPName = 1;
+      }
+    }
+
+    const dataRows = isHeader ? rows.slice(1) : rows;
+    const newVendors = [];
+    const newProducts = [];
+    const vMap = new Map();
+    const pMap = new Map();
+
+    dataRows.forEach(r => {
+      const pCode = String(colPCode >= 0 && r[colPCode] !== undefined ? r[colPCode] : '').trim().replace(/\.0$/, '');
+      const pName = String(colPName >= 0 && r[colPName] !== undefined ? r[colPName] : '').trim();
+      const bCode = String(colBCode >= 0 && r[colBCode] !== undefined ? r[colBCode] : '').trim();
+      const vCode = colVCode >= 0 && r[colVCode] !== undefined ? String(r[colVCode]).trim().replace(/\.0$/, '') : '';
+      const vName = colVName >= 0 && r[colVName] !== undefined ? String(r[colVName]).trim() : '';
+
+      if (!pCode || pCode.toLowerCase() === '제품코드' || pCode.toLowerCase() === 'code') return;
+
+      if (vCode && vName && !vMap.has(vCode)) {
+        const vObj = { code: vCode, name: vName, keywords: [vName.replace(/\(주\)|주식회사|㈜/g, '').trim()] };
+        newVendors.push(vObj);
+        vMap.set(vCode, vObj);
+      }
+
+      const ex = pMap.get(pCode);
+      if (ex) {
+        if (pName) ex.name = pName;
+        if (bCode) ex.buyer_code = bCode;
+        if (vCode && !ex.vendor_codes.includes(vCode)) {
+          ex.vendor_codes.push(vCode);
+        }
+      } else {
+        const pObj = {
+          code: pCode,
+          name: pName || ('품목 ' + pCode),
+          buyer_code: bCode,
+          vendor_codes: vCode ? [vCode] : []
+        };
+        newProducts.push(pObj);
+        pMap.set(pCode, pObj);
+      }
+    });
+
+    vendors = newVendors;
+    products = newProducts;
     rebuildVendorIndexes();
     refreshUI();
   }
