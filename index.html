@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>제품검색기 V 1.0</title>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <style>
@@ -24,46 +24,45 @@
       --shadow: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Segoe UI", Roboto, sans-serif; }
-    body { background-color: #f1f5f9; color: var(--slate-800); min-height: 100vh; padding: 20px 16px 40px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background-color: #f1f5f9; color: var(--slate-800); min-height: 100vh; padding: 16px 14px 40px; }
     .container { max-width: 1400px; margin: 0 auto; }
 
-    header { background: white; padding: 20px 26px; border-radius: var(--radius); box-shadow: var(--shadow); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 18px; border-left: 6px solid var(--primary); }
-    .title-area h1 { font-size: 22px; font-weight: 800; color: var(--slate-800); display: flex; align-items: center; gap: 10px; }
-    .title-area p { font-size: 13px; color: var(--slate-500); margin-top: 4px; }
-    .badge-pill { display: inline-block; padding: 3px 10px; background: var(--primary-light); color: var(--primary); border-radius: 999px; font-size: 12px; font-weight: 600; }
-    .header-actions { display: flex; align-items: center; gap: 10px; }
-    .stat-card { background: var(--slate-50); border: 1px solid var(--slate-200); padding: 8px 14px; border-radius: 8px; text-align: center; min-width: 90px; }
-    .stat-card .label { font-size: 11px; color: var(--slate-500); }
-    .stat-card .value { font-size: 17px; font-weight: 700; color: var(--primary); margin-top: 2px; }
+    /* Header */
+    header { background: white; padding: 18px 22px; border-radius: var(--radius); box-shadow: var(--shadow); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; border-left: 6px solid var(--primary); }
+    .title-area h1 { font-size: 21px; font-weight: 800; color: var(--slate-800); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .title-area p { font-size: 12.5px; color: var(--slate-500); margin-top: 4px; }
+    .badge-pill { display: inline-block; padding: 3px 10px; background: var(--primary-light); color: var(--primary); border-radius: 999px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+    .header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .stat-card { background: var(--slate-50); border: 1px solid var(--slate-200); padding: 7px 12px; border-radius: 8px; text-align: center; min-width: 82px; flex: 1; }
+    .stat-card .label { font-size: 11px; color: var(--slate-500); white-space: nowrap; }
+    .stat-card .value { font-size: 16px; font-weight: 700; color: var(--primary); margin-top: 2px; }
 
-    .search-panel { background: white; padding: 20px 24px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 18px; }
-    
-    /* Prominent Buyer Search Input Box */
+    /* Top Buyer Panel */
+    .search-panel { background: white; padding: 18px 20px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 16px; }
     .buyer-highlight-box {
       background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-      border: 2.5px solid #0284c7;
+      border: 2px solid #0284c7;
       border-radius: 12px;
-      padding: 18px 22px;
-      margin-bottom: 16px;
+      padding: 16px 18px;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
+      gap: 14px;
       box-shadow: 0 4px 12px rgba(2, 132, 199, 0.08);
     }
-    .buyer-info { display: flex; align-items: center; gap: 14px; }
-    .buyer-icon { font-size: 32px; background: white; width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; border-radius: 50%; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+    .buyer-info { display: flex; align-items: center; gap: 12px; }
+    .buyer-icon { font-size: 28px; background: white; width: 46px; height: 46px; min-width: 46px; display: flex; align-items: center; justify-content: center; border-radius: 50%; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
     .buyer-title { font-size: 16px; font-weight: 800; color: #0369a1; }
-    .buyer-desc { font-size: 12.5px; color: #0284c7; margin-top: 3px; font-weight: 500; }
+    .buyer-desc { font-size: 12.5px; color: #0284c7; margin-top: 2px; font-weight: 500; line-height: 1.4; }
 
-    .buyer-input-group { display: flex; align-items: center; gap: 8px; flex: 1; max-width: 480px; }
+    .buyer-input-group { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 260px; max-width: 480px; }
     .buyer-input-wrapper { position: relative; width: 100%; }
     .buyer-input-wrapper input {
       width: 100%;
-      height: 48px;
-      padding: 0 16px 0 44px;
+      height: 46px;
+      padding: 0 38px 0 42px;
       border: 2px solid #0284c7;
       border-radius: 10px;
       font-size: 16px;
@@ -71,32 +70,19 @@
       color: #0c4a6e;
       background: white;
       outline: none;
-      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
     }
-    .buyer-input-wrapper input::placeholder { font-weight: 500; color: #94a3b8; font-size: 14px; }
-    .buyer-input-wrapper .icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 20px; pointer-events: none; }
+    .buyer-input-wrapper input::placeholder { font-weight: 500; color: #94a3b8; font-size: 13.5px; }
+    .buyer-input-wrapper .icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 18px; pointer-events: none; }
 
-    .sub-controls {
-      display: grid;
-      grid-template-columns: 1fr 1.3fr auto;
-      gap: 14px;
-      align-items: flex-end;
-    }
-    @media (max-width: 860px) {
-      .sub-controls { grid-template-columns: 1fr; }
-      .buyer-highlight-box { flex-direction: column; align-items: stretch; }
-      .buyer-input-group { max-width: 100%; }
-    }
+    .management-bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--slate-200); flex-wrap: wrap; }
+    .quick-tags { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+    .tag { background: var(--slate-100); color: var(--slate-700); padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--slate-200); }
+    .tag:hover, .tag:active { background: var(--primary-light); color: var(--primary); border-color: #bfdbfe; }
 
-    .form-group { display: flex; flex-direction: column; gap: 5px; }
-    .form-group label { font-size: 13px; font-weight: 600; color: var(--slate-700); }
-    .input-wrapper { position: relative; }
-    .input-wrapper input { width: 100%; height: 40px; padding: 0 14px 0 36px; border: 1.5px solid var(--slate-200); border-radius: 8px; font-size: 13.5px; outline: none; }
-    .input-wrapper input:focus { border-color: var(--primary); }
-    .input-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--slate-500); pointer-events: none; }
-    .clear-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--slate-300); cursor: pointer; font-size: 16px; display: none; }
+    .action-btn-group { display: flex; flex-wrap: wrap; gap: 6px; }
 
-    button.btn { height: 40px; padding: 0 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: none; white-space: nowrap; }
+    button.btn { height: 38px; padding: 0 12px; border-radius: 8px; font-size: 12.5px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 5px; border: none; white-space: nowrap; }
     button.btn-primary { background: var(--primary); color: white; }
     button.btn-primary:hover { background: var(--primary-dark); }
     button.btn-success { background: #059669; color: white; }
@@ -105,41 +91,87 @@
     button.btn-danger { background: var(--danger); color: white; }
     button.btn-danger:disabled { background: #fca5a5; cursor: not-allowed; }
 
-    .management-bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--slate-200); flex-wrap: wrap; }
-    .quick-tags { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-    .tag { background: var(--slate-100); color: var(--slate-700); padding: 3px 9px; border-radius: 6px; font-size: 12px; cursor: pointer; border: 1px solid var(--slate-200); }
-    .tag:hover { background: var(--primary-light); color: var(--primary); }
+    /* Search Box inside each Section */
+    .section-search-box {
+      background: white;
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1.5px solid var(--slate-200);
+    }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label { font-size: 13px; font-weight: 700; color: var(--slate-800); display: flex; align-items: center; justify-content: space-between; }
+    .input-wrapper { position: relative; }
+    .input-wrapper input { width: 100%; height: 42px; padding: 0 36px 0 38px; border: 1.5px solid var(--slate-300); border-radius: 8px; font-size: 15px; outline: none; background: var(--slate-50); transition: all 0.15s; }
+    .input-wrapper input:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+    .input-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--slate-500); pointer-events: none; font-size: 15px; }
+    .clear-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--slate-400); cursor: pointer; font-size: 18px; display: none; padding: 4px; }
 
-    .grid-layout { display: grid; grid-template-columns: 330px 1fr; gap: 18px; }
-    @media (max-width: 960px) { .grid-layout { grid-template-columns: 1fr; } }
+    /* Workspace Layout:
+       DOM Order:
+       1. .product-section (품목명 키워드 검색창 -> 담당 품목 목록)
+       2. .company-section (회사코드/협력사명 검색창 -> 협력사 디렉토리)
+       On PC (>= 961px): 2-column grid (Company on Left 340px, Product on Right 1fr)
+       On Mobile (<= 960px): Natural DOM order stack!
+    */
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      grid-template-areas: "company product";
+      gap: 18px;
+      align-items: start;
+    }
+    .product-section {
+      grid-area: product;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 0;
+    }
+    .company-section {
+      grid-area: company;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 0;
+    }
 
-    .company-card, .table-card { background: white; border-radius: var(--radius); box-shadow: var(--shadow); display: flex; flex-direction: column; height: calc(100vh - 350px); min-height: 520px; overflow: hidden; }
-    .card-header { padding: 14px 18px; border-bottom: 1px solid var(--slate-200); font-size: 14.5px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; background: #fafbfc; }
-    .table-container, .company-list { flex: 1; overflow-y: auto; }
+    .company-card, .table-card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 340px);
+      min-height: 480px;
+      overflow: hidden;
+    }
+    .card-header { padding: 13px 16px; border-bottom: 1px solid var(--slate-200); font-size: 14px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; background: #fafbfc; gap: 8px; flex-wrap: wrap; }
+    .table-container, .company-list { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
     
     .company-list { list-style: none; }
-    .company-item { padding: 11px 16px; border-bottom: 1px solid var(--slate-100); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .company-item { padding: 12px 16px; border-bottom: 1px solid var(--slate-100); cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
     .company-item:hover { background: var(--primary-light); }
     .company-item.active { background: #e0e7ff; border-left: 4px solid var(--primary); font-weight: bold; }
-    .company-name { font-size: 13.5px; font-weight: 600; color: var(--slate-800); }
-    .company-code { font-size: 12px; color: var(--slate-500); font-family: ui-monospace, monospace; }
-    .item-del-btn { opacity: 0; background: none; border: none; color: var(--slate-400); font-size: 15px; cursor: pointer; padding: 4px; }
+    .company-name { font-size: 13.5px; font-weight: 600; color: var(--slate-800); line-height: 1.35; }
+    .company-code { font-size: 12px; color: var(--slate-500); font-family: ui-monospace, monospace; margin-top: 2px; }
+    .item-del-btn { opacity: 0.25; background: none; border: none; color: var(--slate-400); font-size: 15px; cursor: pointer; padding: 4px 6px; }
     .company-item:hover .item-del-btn, tbody tr:hover .item-del-btn { opacity: 1; }
     .item-del-btn:hover { color: var(--danger); }
 
     table { width: 100%; border-collapse: collapse; text-align: left; }
-    thead th { position: sticky; top: 0; background: #f8fafc; z-index: 2; padding: 12px 14px; font-size: 12.5px; font-weight: 700; color: var(--slate-700); border-bottom: 1.5px solid var(--slate-200); }
+    thead th { position: sticky; top: 0; background: #f8fafc; z-index: 2; padding: 11px 12px; font-size: 12.5px; font-weight: 700; color: var(--slate-700); border-bottom: 1.5px solid var(--slate-200); white-space: nowrap; }
     tbody tr { border-bottom: 1px solid var(--slate-100); }
     tbody tr:hover { background: #f8faff; }
-    tbody td { padding: 11px 14px; font-size: 13px; color: var(--slate-700); vertical-align: middle; }
+    tbody td { padding: 11px 12px; font-size: 13px; color: var(--slate-700); vertical-align: middle; }
     
     input.row-checkbox, input.vendor-checkbox, input#selectAllCheckbox, input#selectAllVendorsCheckbox { width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary); }
     tr.selected-row, li.selected-row { background-color: #eff6ff !important; }
 
-    .p-code { font-family: ui-monospace, monospace; font-weight: 600; color: var(--primary); background: var(--primary-light); padding: 3px 8px; border-radius: 4px; display: inline-block; font-size: 12px; }
-    .b-code { font-family: ui-monospace, monospace; font-weight: 700; color: #0284c7; background: #e0f2fe; border: 1px solid #bae6fd; padding: 2px 7px; border-radius: 4px; display: inline-block; font-size: 11.5px; margin: 2px; }
-    .v-code { font-family: ui-monospace, monospace; font-weight: 600; color: #0f766e; background: #f0fdfa; border: 1px solid #ccfbf1; padding: 2px 7px; border-radius: 4px; display: inline-block; font-size: 11.5px; margin: 2px; }
-    .vendor-badge { display: inline-block; font-size: 11.5px; padding: 2px 7px; background: var(--slate-100); color: var(--slate-700); border-radius: 4px; border: 1px solid var(--slate-200); margin: 2px; }
+    .p-code { font-family: ui-monospace, monospace; font-weight: 700; color: var(--primary); background: var(--primary-light); padding: 3px 8px; border-radius: 5px; display: inline-block; font-size: 12px; }
+    .b-code { font-family: ui-monospace, monospace; font-weight: 700; color: #0284c7; background: #e0f2fe; border: 1px solid #bae6fd; padding: 2px 7px; border-radius: 5px; display: inline-block; font-size: 11.5px; margin: 1px; }
+    .v-code { font-family: ui-monospace, monospace; font-weight: 600; color: #0f766e; background: #f0fdfa; border: 1px solid #ccfbf1; padding: 2px 7px; border-radius: 5px; display: inline-block; font-size: 11.5px; margin: 1px; }
+    .vendor-badge { display: inline-block; font-size: 11.5px; padding: 2px 7px; background: var(--slate-100); color: var(--slate-700); border-radius: 5px; border: 1px solid var(--slate-200); margin: 1px; font-weight: 500; }
 
     .table-footer {
       padding: 10px 16px;
@@ -152,13 +184,14 @@
       color: var(--slate-600);
     }
 
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45); backdrop-filter: blur(2px); z-index: 999; align-items: center; justify-content: center; padding: 16px; }
-    .modal { background: white; width: 100%; max-width: 580px; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
-    .modal-header { padding: 16px 20px; background: #fafbfc; border-bottom: 1px solid var(--slate-200); display: flex; justify-content: space-between; align-items: center; font-weight: 700; }
-    .modal-body { padding: 20px; display: flex; flex-direction: column; gap: 14px; max-height: 75vh; overflow-y: auto; }
-    .modal-footer { padding: 14px 20px; background: #fafbfc; border-top: 1px solid var(--slate-200); display: flex; justify-content: flex-end; gap: 10px; }
+    /* Modals */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45); backdrop-filter: blur(2px); z-index: 999; align-items: center; justify-content: center; padding: 14px; }
+    .modal { background: white; width: 100%; max-width: 540px; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+    .modal-header { padding: 15px 18px; background: #fafbfc; border-bottom: 1px solid var(--slate-200); display: flex; justify-content: space-between; align-items: center; font-weight: 700; }
+    .modal-body { padding: 18px; display: flex; flex-direction: column; gap: 14px; max-height: 78vh; overflow-y: auto; }
+    .modal-footer { padding: 12px 18px; background: #fafbfc; border-top: 1px solid var(--slate-200); display: flex; justify-content: flex-end; gap: 8px; }
     
-    .upload-dropzone { border: 2px dashed #94a3b8; border-radius: 10px; padding: 36px 16px; text-align: center; cursor: pointer; background: var(--slate-50); transition: all 0.2s ease; }
+    .upload-dropzone { border: 2px dashed #94a3b8; border-radius: 10px; padding: 30px 14px; text-align: center; cursor: pointer; background: var(--slate-50); transition: all 0.2s ease; }
     .upload-dropzone:hover, .upload-dropzone.dragover { border-color: var(--primary); background: #dbeafe; }
     
     #globalDragIndicator {
@@ -174,9 +207,11 @@
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
       color: var(--primary);
+      text-align: center;
+      padding: 20px;
     }
     
     #loadingOverlay {
@@ -217,9 +252,8 @@
     .pwd-input-wrap input:focus { border-color: var(--primary); }
     .pwd-error-msg { font-size: 12.5px; color: var(--danger); font-weight: 600; display: none; }
 
-    /* Initial state prompt card */
     .initial-prompt-card {
-      padding: 60px 20px;
+      padding: 46px 18px;
       text-align: center;
       color: var(--slate-500);
       display: flex;
@@ -228,10 +262,136 @@
       justify-content: center;
       height: 100%;
     }
-    .initial-prompt-card .big-icon { font-size: 52px; margin-bottom: 14px; opacity: 0.9; }
-    .initial-prompt-card h3 { font-size: 19px; color: var(--slate-800); margin-bottom: 8px; font-weight: 800; }
-    .initial-prompt-card p { font-size: 13.5px; line-height: 1.6; max-width: 460px; color: var(--slate-600); }
-    .initial-prompt-card .tip { margin-top: 14px; padding: 6px 14px; background: #e0f2fe; color: #0369a1; border-radius: 20px; font-size: 12.5px; font-weight: 700; }
+    .initial-prompt-card .big-icon { font-size: 46px; margin-bottom: 12px; opacity: 0.9; }
+    .initial-prompt-card h3 { font-size: 18px; color: var(--slate-800); margin-bottom: 8px; font-weight: 800; }
+    .initial-prompt-card p { font-size: 13px; line-height: 1.6; max-width: 440px; color: var(--slate-600); }
+    .initial-prompt-card .tip { margin-top: 12px; padding: 6px 14px; background: #e0f2fe; color: #0369a1; border-radius: 20px; font-size: 12px; font-weight: 700; }
+
+    /* =========================================================
+       📱 스마트폰 & 태블릿 반응형 최적화 (Mobile First UX)
+       순서: 품목명 검색창 -> 담당품목목록 -> 회사코드/협력사명 검색창 -> 협력사 디렉토리
+       ========================================================= */
+    @media (max-width: 960px) {
+      body { padding: 10px 10px 36px; }
+      header { padding: 14px 16px; margin-bottom: 12px; }
+      .title-area h1 { font-size: 18px; }
+      .title-area p { font-size: 11.5px; }
+      .header-actions { width: 100%; justify-content: space-between; gap: 6px; }
+      .stat-card { padding: 6px 8px; min-width: 70px; }
+      .stat-card .value { font-size: 14.5px; }
+
+      .search-panel { padding: 14px; margin-bottom: 14px; }
+      .buyer-highlight-box { padding: 14px; gap: 10px; }
+      .buyer-icon { width: 40px; height: 40px; min-width: 40px; font-size: 22px; }
+      .buyer-title { font-size: 15px; }
+      .buyer-desc { font-size: 11.5px; }
+      .buyer-input-group { max-width: 100%; width: 100%; }
+
+      .management-bar { flex-direction: column; align-items: stretch; gap: 10px; }
+      .action-btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; width: 100%; }
+      .action-btn-group button.btn { width: 100%; font-size: 12px; height: 36px; padding: 0 8px; }
+
+      /* 단일 컬럼 스택: DOM 순서 그대로 (1.품목검색 -> 2.품목목록 -> 3.협력사검색 -> 4.협력사목록) */
+      .workspace-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+      .product-section, .company-section {
+        width: 100%;
+        gap: 10px;
+      }
+
+      /* 모바일에서는 내부 스크롤 박스 높이를 적당하게 조절하여 답답함 해소 */
+      .table-card {
+        height: auto;
+        max-height: 62vh;
+        min-height: 300px;
+      }
+      .company-card {
+        height: auto;
+        max-height: 50vh;
+        min-height: 260px;
+      }
+    }
+
+    /* 스마트폰 화면(768px 이하)에서 품목 테이블을 보기 편한 카드형 리스트로 자동 변환 */
+    @media (max-width: 768px) {
+      #productTable thead {
+        display: none; /* 모바일에서는 좁은 테이블 헤더를 숨기고 카드형으로 깔끔하게 표시 */
+      }
+      #productTable, #productTable tbody {
+        display: block;
+        width: 100%;
+      }
+      #productTable tbody tr {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        grid-template-areas:
+          "check meta del"
+          "name name name"
+          "vendor vendor vendor";
+        gap: 6px 8px;
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--slate-200);
+        align-items: center;
+      }
+      #productTable tbody td {
+        padding: 0;
+        border: none;
+      }
+      #productTable tbody td.cell-check {
+        grid-area: check;
+      }
+      #productTable tbody td.cell-no {
+        display: none; /* 카드 뷰에서는 번호 생략하여 공간 확보 */
+      }
+      #productTable tbody td.cell-code {
+        grid-area: meta;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      #productTable tbody td.cell-name {
+        grid-area: name;
+        font-size: 14px;
+        font-weight: 700 !important;
+        color: var(--slate-800);
+        line-height: 1.4;
+        margin-top: 2px;
+        word-break: keep-all;
+      }
+      #productTable tbody td.cell-buyer {
+        display: none; /* 제품코드 옆에 통합 배지로 표시 */
+      }
+      #productTable tbody td.cell-vcode {
+        display: none; /* 하단 협력사 영역에 통합 표시 */
+      }
+      #productTable tbody td.cell-vname {
+        grid-area: vendor;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        align-items: center;
+        margin-top: 2px;
+      }
+      #productTable tbody td.cell-del {
+        grid-area: del;
+      }
+      .item-del-btn {
+        opacity: 0.6;
+        font-size: 16px;
+      }
+      .mobile-only-badge {
+        display: inline-block !important;
+      }
+    }
+    @media (min-width: 769px) {
+      .mobile-only-badge {
+        display: none !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -249,21 +409,21 @@
 <div class="container">
   <header>
     <div class="title-area">
-      <h1><span>🔍</span> 제품검색기 V 1.0 <span class="badge-pill">바이어 전용 모드</span></h1>
+      <h1><span>🔍</span> 제품검색기 V 1.0 <span class="badge-pill">모바일·PC 최적화</span></h1>
       <p>바이어 코드 기반 조회, 협력사 스마트 연동, 관리자 보안 인증 탑재</p>
     </div>
     <div class="header-actions">
-      <div class="stat-card" style="min-width:130px;">
-        <div class="label">데이터 동기화 상태</div>
-        <div class="value" id="syncStatusBadge" style="font-size:12px;font-weight:700;color:#0284c7;margin-top:4px;">확인 중...</div>
+      <div class="stat-card" style="min-width:115px;">
+        <div class="label">동기화 상태</div>
+        <div class="value" id="syncStatusBadge" style="font-size:11.5px;font-weight:700;color:#0284c7;margin-top:3px;">확인 중...</div>
       </div>
       <div class="stat-card"><div class="label">협력사 수</div><div class="value" id="statVendorCount">-</div></div>
       <div class="stat-card"><div class="label">품목 수</div><div class="value" id="statProductCount">-</div></div>
     </div>
   </header>
 
+  <!-- 최상단: 바이어 코드 입력 영역 및 관리 도구 -->
   <div class="search-panel">
-    <!-- Updated Buyer Input Box -->
     <div class="buyer-highlight-box">
       <div class="buyer-info">
         <div class="buyer-icon">🎯</div>
@@ -275,140 +435,166 @@
       <div class="buyer-input-group">
         <div class="buyer-input-wrapper">
           <span class="icon">🏷️</span>
-          <input type="text" id="buyerInput" placeholder="바이어 코드를 입력하세요 (전체 조회는 * 입력)" autocomplete="off">
+          <input type="text" id="buyerInput" placeholder="바이어 코드를 입력하세요" autocomplete="off">
           <button class="clear-btn" id="clearBuyerBtn" onclick="clearBuyer()">&times;</button>
         </div>
       </div>
     </div>
 
-    <div class="sub-controls">
-      <div class="form-group">
-        <label>회사코드 또는 협력사명</label>
-        <div class="input-wrapper">
-          <span class="input-icon">🏢</span>
-          <input type="text" id="companyInput" placeholder="예: 101113, 삼립, 평택물류센터 등" autocomplete="off">
-          <button class="clear-btn" id="clearCompanyBtn" onclick="clearCompany()">&times;</button>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>품목명 키워드 검색</label>
-        <div class="input-wrapper">
-          <span class="input-icon">🔍</span>
-          <input type="text" id="productInput" placeholder="예: 크루아상, 피자, 또띠아, 베이글 등" autocomplete="off">
-          <button class="clear-btn" id="clearProductBtn" onclick="clearProduct()">&times;</button>
-        </div>
-      </div>
-      <div class="btn-group" style="display:flex; gap:8px;">
-        <button class="btn btn-outline" onclick="resetAllFilters()"><span>↺</span> 초기화</button>
-        <button class="btn btn-primary" onclick="exportToCSV()"><span>📥</span> CSV 다운</button>
-      </div>
-    </div>
-
     <div class="management-bar">
       <div class="quick-tags">
-        <span style="font-size:12px;color:var(--slate-500);font-weight:600;">빠른 바이어 선택:</span>
+        <span style="font-size:12px;color:var(--slate-500);font-weight:700;">빠른 선택:</span>
         <span class="tag" onclick="quickSelectBuyer('*')">전체보기 (*)</span>
-        <span class="tag" onclick="quickSelectBuyer('B101')">바이어 B101</span>
-        <span class="tag" onclick="quickSelectBuyer('B102')">바이어 B102</span>
-        <span class="tag" onclick="quickSelectBuyer('B103')">바이어 B103</span>
-        <span class="tag" onclick="quickSelectBuyer('B104')">바이어 B104</span>
+        <span class="tag" onclick="quickSelectBuyer('B101')">B101</span>
+        <span class="tag" onclick="quickSelectBuyer('B102')">B102</span>
+        <span class="tag" onclick="quickSelectBuyer('B103')">B103</span>
+        <span class="tag" onclick="quickSelectBuyer('B104')">B104</span>
+        <span class="tag" style="background:#fff1f2;color:#e11d48;border-color:#fecdd3;" onclick="resetAllFilters()">↺ 전체 초기화</span>
       </div>
-      <div style="display:flex;gap:8px;">
+      <div class="action-btn-group">
         <button class="btn btn-success" onclick="requirePasswordAndExecute(openAddProductModal)">➕ 품목 추가 🔒</button>
         <button class="btn btn-outline" onclick="requirePasswordAndExecute(openAddVendorModal)">🏢 업체 추가 🔒</button>
-        <button class="btn btn-primary" onclick="requirePasswordAndExecute(openUploadModal)">📂 파일 일괄 업로드 🔒</button>
-        <button class="btn btn-danger-outline" onclick="requirePasswordAndExecute(confirmResetInitialData)">⚠️ 초기 원본복구</button>
+        <button class="btn btn-primary" onclick="requirePasswordAndExecute(openUploadModal)">📂 일괄 업로드 🔒</button>
+        <button class="btn btn-outline" onclick="exportToCSV()">📥 CSV 다운</button>
       </div>
     </div>
   </div>
 
-  <div class="grid-layout">
-    <div class="company-card">
-      <div class="card-header">
-        <div style="display:flex;align-items:center;gap:8px;">
-          <span>협력사 디렉토리</span>
-          <span class="badge-pill" id="companyCountBadge">0개사</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:6px;">
-          <input type="checkbox" id="selectAllVendorsCheckbox" onchange="toggleSelectAllVendors(this)" title="전체 선택">
-          <button class="btn btn-danger" id="batchDeleteVendorBtn" onclick="requirePasswordAndExecute(deleteSelectedVendors)" style="height:26px;padding:0 8px;font-size:11px;" disabled>
-            🗑️ (<span id="selectedVendorCountSpan">0</span>)
-          </button>
+  <!-- 메인 작업 영역
+       모바일 배치 순서(DOM 순서):
+       1. 품목명 키워드 검색창
+       2. 담당 품목 목록
+       3. 회사코드 또는 협력사명 검색창
+       4. 협력사 디렉토리
+  -->
+  <div class="workspace-grid">
+
+    <!-- [순서 1 & 2] 품목명 키워드 검색창 + 담당 품목 목록 -->
+    <div class="product-section">
+      <!-- 1. 품목명 키워드 검색창 -->
+      <div class="section-search-box">
+        <div class="form-group">
+          <label>
+            <span>🔍 품목명 키워드 또는 제품코드 검색</span>
+            <span style="font-size:11.5px;color:var(--slate-500);font-weight:500;">실시간 필터링</span>
+          </label>
+          <div class="input-wrapper">
+            <span class="input-icon">🔍</span>
+            <input type="text" id="productInput" placeholder="예: 크루아상, 피자, 또띠아, 베이글, 제품코드 등" autocomplete="off">
+            <button class="clear-btn" id="clearProductBtn" onclick="clearProduct()">&times;</button>
+          </div>
         </div>
       </div>
-      <ul class="company-list" id="companyList"></ul>
-      <div id="companyEmptyGuide" style="padding:40px 16px;text-align:center;color:var(--slate-400);font-size:13px;display:none;">
-        상단에 바이어 코드를 입력하면<br>해당 협력사 목록이 표시됩니다.
+
+      <!-- 2. 담당 품목 목록 -->
+      <div class="table-card">
+        <div class="card-header">
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <span id="resultHeaderTitle">담당 품목 목록</span>
+            <span class="badge-pill" id="productCountBadge">0건</span>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <button class="btn btn-danger" id="batchDeleteBtn" onclick="requirePasswordAndExecute(deleteSelectedProducts)" style="height:28px;padding:0 10px;font-size:11.5px;" disabled>
+              🗑️ 선택삭제 (<span id="selectedCountSpan">0</span>)
+            </button>
+            <button class="btn btn-outline" onclick="requirePasswordAndExecute(deleteCurrentFilteredProducts)" style="height:28px;padding:0 8px;font-size:11.5px;">
+              전체삭제
+            </button>
+          </div>
+        </div>
+        <div class="table-container">
+          <!-- 초기 안내 화면 -->
+          <div id="initialBuyerPrompt" class="initial-prompt-card">
+            <div class="big-icon">🎯</div>
+            <h3>바이어 코드를 입력하세요</h3>
+            <p>
+              상단 입력란에 담당 <b>바이어 코드</b>를 입력하시면<br>
+              해당 바이어의 품목 목록과 협력사가 즉시 나타납니다.
+            </p>
+            <div class="tip">전체 품목을 조회하시려면 별표( <b>*</b> )를 입력하세요.</div>
+          </div>
+
+          <table id="productTable" style="display:none;">
+            <thead>
+              <tr>
+                <th style="width:36px;text-align:center;"><input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this)"></th>
+                <th style="width:46px;text-align:center;">No.</th>
+                <th style="width:95px;">제품코드</th>
+                <th>품목명 (규격/포장단위)</th>
+                <th style="width:95px;color:#0284c7;">바이어코드</th>
+                <th style="width:105px;">협력사 코드</th>
+                <th style="width:155px;">협력사명</th>
+                <th style="width:46px;text-align:center;">관리</th>
+              </tr>
+            </thead>
+            <tbody id="productTableBody"></tbody>
+          </table>
+          <div id="emptyState" style="display:none;padding:46px 16px;text-align:center;color:var(--slate-500);">
+            <h3>해당 조건과 일치하는 품목이 없습니다.</h3>
+          </div>
+        </div>
+        <div class="table-footer" id="tableFooter">
+          <span id="pageInfoSpan">바이어 코드를 입력해주세요</span>
+          <span style="font-size:11.5px;color:var(--slate-400);cursor:pointer;" onclick="requirePasswordAndExecute(confirmResetInitialData)">⚙️ 원본복구</span>
+        </div>
       </div>
     </div>
 
-    <div class="table-card">
-      <div class="card-header">
-        <div style="display:flex;align-items:center;gap:8px;">
-          <span id="resultHeaderTitle">조회 대기 중</span>
-          <span class="badge-pill" id="productCountBadge">0건</span>
-        </div>
-        <div style="display:flex;gap:8px;">
-          <button class="btn btn-danger" id="batchDeleteBtn" onclick="requirePasswordAndExecute(deleteSelectedProducts)" style="height:32px;padding:0 12px;font-size:12px;" disabled>
-            <span>🗑️</span> 선택 삭제 (<span id="selectedCountSpan">0</span>)
-          </button>
-          <button class="btn btn-outline" onclick="requirePasswordAndExecute(deleteCurrentFilteredProducts)" style="height:32px;padding:0 10px;font-size:12px;">
-            검색결과 모두 삭제
-          </button>
+    <!-- [순서 3 & 4] 회사코드/협력사명 검색창 + 협력사 디렉토리 -->
+    <div class="company-section">
+      <!-- 3. 회사코드 또는 협력사명 검색창 -->
+      <div class="section-search-box">
+        <div class="form-group">
+          <label>
+            <span>🏢 회사코드 또는 협력사명 검색</span>
+            <span style="font-size:11.5px;color:var(--slate-500);font-weight:500;">업체 선별</span>
+          </label>
+          <div class="input-wrapper">
+            <span class="input-icon">🏢</span>
+            <input type="text" id="companyInput" placeholder="예: 101113, 삼립, 평택물류센터 등" autocomplete="off">
+            <button class="clear-btn" id="clearCompanyBtn" onclick="clearCompany()">&times;</button>
+          </div>
         </div>
       </div>
-      <div class="table-container">
-        <!-- 초기 안내 화면 -->
-        <div id="initialBuyerPrompt" class="initial-prompt-card">
-          <div class="big-icon">🎯</div>
-          <h3>바이어 코드를 입력하세요</h3>
-          <p>
-            상단 입력란에 담당 <b>바이어 코드</b>를 입력하시면<br>
-            해당 바이어가 관리하는 협력사와 품목 목록이 즉시 조회됩니다.
-          </p>
-          <div class="tip">전체 품목을 한꺼번에 조회하시려면 별표( <b>*</b> )를 입력하세요.</div>
-        </div>
 
-        <table id="productTable" style="display:none;">
-          <thead>
-            <tr>
-              <th style="width:36px;text-align:center;"><input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this)"></th>
-              <th style="width:50px;text-align:center;">No.</th>
-              <th style="width:100px;">제품코드</th>
-              <th>품목명 (규격/포장단위)</th>
-              <th style="width:105px;color:#0284c7;">바이어코드</th>
-              <th style="width:110px;">협력사 코드</th>
-              <th style="width:160px;">협력사명</th>
-              <th style="width:50px;text-align:center;">관리</th>
-            </tr>
-          </thead>
-          <tbody id="productTableBody"></tbody>
-        </table>
-        <div id="emptyState" style="display:none;padding:50px;text-align:center;color:var(--slate-500);">
-          <h3>해당 조건과 일치하는 품목이 없습니다.</h3>
+      <!-- 4. 협력사 디렉토리 -->
+      <div class="company-card">
+        <div class="card-header">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span>협력사 디렉토리</span>
+            <span class="badge-pill" id="companyCountBadge">0개사</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <input type="checkbox" id="selectAllVendorsCheckbox" onchange="toggleSelectAllVendors(this)" title="전체 선택">
+            <button class="btn btn-danger" id="batchDeleteVendorBtn" onclick="requirePasswordAndExecute(deleteSelectedVendors)" style="height:26px;padding:0 8px;font-size:11px;" disabled>
+              🗑️ (<span id="selectedVendorCountSpan">0</span>)
+            </button>
+          </div>
         </div>
-      </div>
-      <div class="table-footer" id="tableFooter">
-        <span id="pageInfoSpan">표시 중: 0건</span>
+        <ul class="company-list" id="companyList"></ul>
+        <div id="companyEmptyGuide" style="padding:40px 16px;text-align:center;color:var(--slate-400);font-size:13px;display:none;">
+          상단에 바이어 코드를 입력하면<br>해당 협력사 목록이 표시됩니다.
+        </div>
       </div>
     </div>
+
   </div>
 </div>
 
 <!-- 패스워드 인증 모달 -->
 <div class="modal-overlay" id="passwordModal">
-  <div class="modal" style="max-width:400px;">
+  <div class="modal" style="max-width:380px;">
     <div class="modal-header">
       <h3 style="display:flex;align-items:center;gap:6px;">🔒 관리자 인증 필요</h3>
       <button class="clear-btn" style="display:block;" onclick="closeModal('passwordModal')">&times;</button>
     </div>
-    <div class="modal-body" style="padding:24px 20px;">
-      <p style="font-size:13.5px;color:var(--slate-600);line-height:1.5;">
+    <div class="modal-body" style="padding:22px 18px;">
+      <p style="font-size:13px;color:var(--slate-600);line-height:1.5;">
         데이터 변경 및 업로드는 관리자 권한이 필요합니다.<br>
         <b>6자리 관리자 패스워드</b>를 입력해주세요.
       </p>
       <div class="pwd-input-wrap">
-        <input type="password" id="adminPasswordInput" maxlength="6" placeholder="••••••" autocomplete="off">
+        <input type="password" id="adminPasswordInput" inputmode="numeric" maxlength="6" placeholder="••••••" autocomplete="off">
         <div class="pwd-error-msg" id="pwdErrorMsg">비밀번호가 일치하지 않습니다. 다시 입력해주세요.</div>
       </div>
     </div>
@@ -424,9 +610,9 @@
   <div class="modal">
     <div class="modal-header"><h3>➕ 새 품목 등록</h3><button class="clear-btn" style="display:block;" onclick="closeModal('addProductModal')">&times;</button></div>
     <div class="modal-body">
-      <div class="form-group"><label>제품 코드 (필수)</label><input type="text" id="newProdCode" placeholder="예: 320249"></div>
-      <div class="form-group"><label>품목명 (필수)</label><input type="text" id="newProdName" placeholder="예: 스윗 부드러운 또띠아 10인치"></div>
-      <div class="form-group"><label>바이어 코드 (필수/권장)</label><input type="text" id="newProdBuyer" placeholder="바이어 코드를 입력하세요 (예: B101)"></div>
+      <div class="form-group"><label>제품 코드 (필수)</label><input type="text" id="newProdCode" placeholder="예: 320249" style="height:40px;padding:0 12px;border:1.5px solid var(--slate-200);border-radius:8px;"></div>
+      <div class="form-group"><label>품목명 (필수)</label><input type="text" id="newProdName" placeholder="예: 스윗 부드러운 또띠아 10인치" style="height:40px;padding:0 12px;border:1.5px solid var(--slate-200);border-radius:8px;"></div>
+      <div class="form-group"><label>바이어 코드 (필수/권장)</label><input type="text" id="newProdBuyer" placeholder="바이어 코드를 입력하세요" style="height:40px;padding:0 12px;border:1.5px solid var(--slate-200);border-radius:8px;"></div>
       <div class="form-group"><label>담당 협력사 지정</label><select id="newProdVendor" style="width:100%;height:40px;padding:0 10px;border:1.5px solid var(--slate-200);border-radius:8px;"></select></div>
     </div>
     <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('addProductModal')">취소</button><button class="btn btn-primary" onclick="saveNewProduct()">저장</button></div>
@@ -438,9 +624,9 @@
   <div class="modal">
     <div class="modal-header"><h3>🏢 새 협력사 등록</h3><button class="clear-btn" style="display:block;" onclick="closeModal('addVendorModal')">&times;</button></div>
     <div class="modal-body">
-      <div class="form-group"><label>협력사 코드 (필수)</label><input type="text" id="newVendorCode" placeholder="예: 101113"></div>
-      <div class="form-group"><label>협력사명 (필수)</label><input type="text" id="newVendorName" placeholder="예: 평택물류센터"></div>
-      <div class="form-group"><label>매칭 키워드 (쉼표 구분)</label><input type="text" id="newVendorKeywords" placeholder="예: 평택물류, 물류센터"></div>
+      <div class="form-group"><label>협력사 코드 (필수)</label><input type="text" id="newVendorCode" placeholder="예: 101113" style="height:40px;padding:0 12px;border:1.5px solid var(--slate-200);border-radius:8px;"></div>
+      <div class="form-group"><label>협력사명 (필수)</label><input type="text" id="newVendorName" placeholder="예: 평택물류센터" style="height:40px;padding:0 12px;border:1.5px solid var(--slate-200);border-radius:8px;"></div>
+      <div class="form-group"><label>매칭 키워드 (쉼표 구분)</label><input type="text" id="newVendorKeywords" placeholder="예: 평택물류, 물류센터" style="height:40px;padding:0 12px;border:1.5px solid var(--slate-200);border-radius:8px;"></div>
     </div>
     <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('addVendorModal')">취소</button><button class="btn btn-primary" onclick="saveNewVendor()">저장</button></div>
   </div>
@@ -463,7 +649,7 @@
         </div>
       </div>
       <div class="upload-dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()">
-        <div style="font-weight:700;margin-bottom:6px;font-size:15px;color:var(--slate-800);">여기를 클릭하거나 파일을 끌어다 놓으세요</div>
+        <div style="font-weight:700;margin-bottom:6px;font-size:14.5px;color:var(--slate-800);">여기를 터치(클릭)하거나 파일을 끌어다 놓으세요</div>
         <div style="font-size:12px;color:var(--slate-500);">지원 포맷: .csv, .xlsx, .xls</div>
         <input type="file" id="fileInput" accept=".csv, .xlsx, .xls" style="display:none;" onchange="handleFileSelect(event)">
       </div>
@@ -491,8 +677,8 @@
   let selectedProductCodes = new Set();
   let selectedVendorCodes = new Set();
 
-  const STORAGE_KEY_VENDORS = "PRODUCT_SEARCH_V18_VENDORS";
-  const STORAGE_KEY_PRODUCTS = "PRODUCT_SEARCH_V18_PRODUCTS";
+  const STORAGE_KEY_VENDORS = "PRODUCT_SEARCH_V19_VENDORS";
+  const STORAGE_KEY_PRODUCTS = "PRODUCT_SEARCH_V19_PRODUCTS";
 
   window.addEventListener('DOMContentLoaded', () => {
     loadData();
@@ -617,14 +803,14 @@
         }
       }
     } catch (err) {
-      console.log('서버 data.csv 자동 로드 건너뜀 (로컬 파일 또는 네트워크 환경):', err.message);
+      console.log('서버 data.csv 자동 로드 건너뜀:', err.message);
     }
 
     vendors = JSON.parse(JSON.stringify(defaultVendors));
     products = JSON.parse(JSON.stringify(defaultProducts));
     rebuildVendorIndexes();
     refreshUI();
-    if (badge) badge.innerHTML = '<span style="color:#64748b;">💾 기본 내장 데이터</span>';
+    if (badge) badge.innerHTML = '<span style="color:#64748b;">💾 기본 데이터</span>';
   }
 
   function parseAndApplyServerRows(rows) {
@@ -742,7 +928,6 @@
     const compGuide = document.getElementById('companyEmptyGuide');
     const compList = document.getElementById('companyList');
 
-    // 1. 최초 화면 또는 바이어코드가 비어있는 경우: 아무것도 보이지 않음!
     if (isBuyerEmpty) {
       promptCard.style.display = 'flex';
       prodTable.style.display = 'none';
@@ -754,18 +939,16 @@
       document.getElementById('productCountBadge').innerText = '0건';
       document.getElementById('statVendorCount').innerText = '-';
       document.getElementById('statProductCount').innerText = '-';
-      document.getElementById('resultHeaderTitle').innerText = '조회 대기 중';
+      document.getElementById('resultHeaderTitle').innerText = '담당 품목 목록 (대기 중)';
       document.getElementById('pageInfoSpan').innerText = '바이어 코드를 입력해주세요';
       currentFilteredProducts = [];
       currentFilteredCompanies = [];
       return;
     }
 
-    // 2. 바이어코드가 입력되었거나 '*' (전체보기) 인 경우
     promptCard.style.display = 'none';
     compGuide.style.display = 'none';
 
-    // 해당 바이어가 관리하는 협력사 코드 목록 및 수량 집계
     let buyerVendorSet = new Set();
     let buyerVendorCounts = new Map();
 
@@ -782,7 +965,6 @@
       }
     });
 
-    // 협력사 필터링: 해당 바이어의 품목이 있는 업체만 노출
     currentFilteredCompanies = vendors.filter(v => {
       const sCode = String(v.code).toLowerCase();
       const sName = (v.name || '').toLowerCase();
@@ -807,23 +989,19 @@
       if (v) targetVendorName = v.name;
     }
 
-    // 품목 필터링: 해당 바이어 품목만 노출
     currentFilteredProducts = products.filter(p => {
       const pBuyer = String(p.buyer_code || '').trim().toLowerCase();
       
-      // 바이어코드 매칭 (*이면 전체)
       if (!isAllMode) {
         if (!pBuyer || !pBuyer.includes(buyerVal)) return false;
       }
 
-      // 품목명 / 제품코드 검색
       if (prodVal) {
         const nameMatch = (p.name || '').toLowerCase().includes(prodVal);
         const codeMatch = String(p.code).toLowerCase().includes(prodVal);
         if (!nameMatch && !codeMatch) return false;
       }
 
-      // 협력사 필터 매칭
       if (targetVendorCodeStr) {
         if (!p.vendor_codes || !p.vendor_codes.some(vc => String(vc) === targetVendorCodeStr)) {
           return false;
@@ -839,20 +1017,18 @@
       return true;
     });
 
-    // 헤더 타이틀 업데이트
     const titleEl = document.getElementById('resultHeaderTitle');
     let titleStr = '';
     if (isAllMode) {
-      titleStr = targetVendorName ? `[전체 바이어] + [${targetVendorName}] 취급 품목` : '전체 품목 목록 (모든 바이어)';
+      titleStr = targetVendorName ? `[전체] ${targetVendorName} 품목` : '전체 품목 목록';
     } else {
       titleStr = targetVendorName 
-        ? `[바이어: ${rawBuyer}] + [${targetVendorName}] 품목`
-        : `[바이어: ${rawBuyer}] 담당 품목 목록`;
+        ? `[${rawBuyer}] ${targetVendorName}`
+        : `[${rawBuyer}] 담당 품목 목록`;
     }
-    if (prodVal) titleStr += ` ('${prodVal}' 검색)`;
+    if (prodVal) titleStr += ` ('${prodVal}')`;
     titleEl.innerText = titleStr;
 
-    // 카운트 배지 실시간 업데이트
     document.getElementById('companyCountBadge').innerText = `${currentFilteredCompanies.length.toLocaleString()}개사`;
     document.getElementById('productCountBadge').innerText = `${currentFilteredProducts.length.toLocaleString()}건`;
     document.getElementById('statVendorCount').innerText = currentFilteredCompanies.length.toLocaleString();
@@ -869,8 +1045,8 @@
     allLi.className = `company-item ${selectedVendorCode === null ? 'active' : ''}`;
     allLi.innerHTML = `
       <div onclick="selectCompany(null)" style="flex:1;display:flex;align-items:center;cursor:pointer;">
-        <span style="font-size:16px;margin-right:8px;">🌐</span>
-        <div class="company-name" style="color:var(--primary);font-weight:700;">해당 바이어 전체 품목</div>
+        <span style="font-size:15px;margin-right:8px;">🌐</span>
+        <div class="company-name" style="color:var(--primary);font-weight:700;">해당 바이어 전체 품목 보기</div>
       </div>
     `;
     ul.appendChild(allLi);
@@ -887,9 +1063,9 @@
 
       li.innerHTML = `
         <div style="display:flex;align-items:center;flex:1;">
-          <input type="checkbox" class="vendor-checkbox" style="margin-right:8px;" ${isChecked ? 'checked' : ''} onclick="event.stopPropagation();" onchange="toggleVendorSelectRow('${v.code}', this.checked)">
+          <input type="checkbox" class="vendor-checkbox" style="margin-right:10px;" ${isChecked ? 'checked' : ''} onclick="event.stopPropagation();" onchange="toggleVendorSelectRow('${v.code}', this.checked)">
           <div onclick="selectCompany('${v.code}')" style="flex:1;">
-            <div class="company-name">${v.name} <span style="font-size:11px;color:var(--primary);font-weight:700;">(${vCount.toLocaleString()})</span></div>
+            <div class="company-name">${v.name} <span style="font-size:11.5px;color:var(--primary);font-weight:700;">(${vCount.toLocaleString()})</span></div>
             <div class="company-code">코드: <strong>${v.code}</strong></div>
           </div>
         </div>
@@ -908,9 +1084,13 @@
       selectedVendorCode = code;
     }
     filterAndRender();
+    // 모바일에서 협력사를 선택했을 때 상단 품목 목록으로 부드럽게 스크롤 이동하여 즉시 결과를 확인하게 배려
+    if (window.innerWidth <= 960 && code !== null) {
+      const prodSection = document.querySelector('.product-section');
+      if (prodSection) prodSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
-  // 100개 단위 제한 없이 전체 품목을 한 번에 테이블로 렌더링
   function renderFullProductTable() {
     const tbody = document.getElementById('productTableBody');
     const emptyState = document.getElementById('emptyState');
@@ -928,7 +1108,7 @@
     }
 
     emptyState.style.display = 'none';
-    table.style.display = 'table';
+    table.style.display = '';
 
     const prodVal = (document.getElementById('productInput').value || '').trim();
     const fragment = document.createDocumentFragment();
@@ -943,11 +1123,13 @@
         vCodesHtml = p.vendor_codes.map(vc => `<span class="v-code">${vc}</span>`).join('');
         vNamesHtml = p.vendor_codes.map(vc => {
           const v = vendorMap.get(String(vc));
-          return `<span class="vendor-badge">${v ? v.name : vc}</span>`;
+          const vLabel = v ? `${v.name}` : vc;
+          return `<span class="vendor-badge"><b class="mobile-only-badge" style="color:#0f766e;margin-right:3px;">[${vc}]</b>${vLabel}</span>`;
         }).join('');
       }
 
       const bCodeHtml = p.buyer_code ? `<span class="b-code">${p.buyer_code}</span>` : '<span style="color:#cbd5e1;font-size:11px;">-</span>';
+      const mobileBuyerBadge = p.buyer_code ? `<span class="b-code mobile-only-badge">바이어: ${p.buyer_code}</span>` : '';
 
       let nameHtml = p.name;
       if (prodVal) {
@@ -959,14 +1141,14 @@
       if (isChecked) tr.classList.add('selected-row');
 
       tr.innerHTML = `
-        <td style="text-align:center;"><input type="checkbox" class="row-checkbox" value="${p.code}" ${isChecked ? 'checked' : ''} onchange="toggleSelectRow('${p.code}', this.checked)"></td>
-        <td style="text-align:center;color:var(--slate-500);">${(idx + 1).toLocaleString()}</td>
-        <td><span class="p-code">${p.code}</span></td>
-        <td style="font-weight:500;">${nameHtml}</td>
-        <td>${bCodeHtml}</td>
-        <td>${vCodesHtml}</td>
-        <td>${vNamesHtml}</td>
-        <td style="text-align:center;"><button class="item-del-btn" title="삭제" onclick="requirePasswordAndExecute(() => deleteProduct('${p.code}'))">✕</button></td>
+        <td class="cell-check" style="text-align:center;"><input type="checkbox" class="row-checkbox" value="${p.code}" ${isChecked ? 'checked' : ''} onchange="toggleSelectRow('${p.code}', this.checked)"></td>
+        <td class="cell-no" style="text-align:center;color:var(--slate-500);">${(idx + 1).toLocaleString()}</td>
+        <td class="cell-code"><span class="p-code">${p.code}</span>${mobileBuyerBadge}</td>
+        <td class="cell-name" style="font-weight:500;">${nameHtml}</td>
+        <td class="cell-buyer">${bCodeHtml}</td>
+        <td class="cell-vcode">${vCodesHtml}</td>
+        <td class="cell-vname">${vNamesHtml}</td>
+        <td class="cell-del" style="text-align:center;"><button class="item-del-btn" title="삭제" onclick="requirePasswordAndExecute(() => deleteProduct('${p.code}'))">✕</button></td>
       `;
       fragment.appendChild(tr);
     });
