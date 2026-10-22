@@ -3,20 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>제품검색기 by Lupin (Ver. 1. 1. 2. 2)</title>
+  <title>제품검색기 by Lupin (Ver. 1. 1. 2)</title>
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <style>
     :root {
       --primary: #6366f1;
       --primary-dark: #4f46e5;
       --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
-      --primary-glow: rgba(99, 102, 241, 0.25);
       --primary-subtle: #f5f3ff;
       --primary-border: #ddd6fe;
-
-      --cyan-gradient: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
-      --emerald-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
 
       --slate-50: #f8fafc;
       --slate-100: #f1f5f9;
@@ -69,7 +64,6 @@
       margin: 0 auto;
     }
 
-    /* ✨ Elegant Glassmorphism Header */
     header {
       background: var(--surface);
       backdrop-filter: blur(16px);
@@ -150,11 +144,6 @@
       gap: 6px;
     }
 
-    .title-area p .info-icon {
-      color: var(--primary);
-      font-size: 14px;
-    }
-
     .header-chips {
       display: flex;
       align-items: center;
@@ -191,7 +180,6 @@
       100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
     }
 
-    /* 💎 Floating Glass Hero Search Box */
     .hero-search-wrapper {
       margin-bottom: 24px;
       position: relative;
@@ -209,7 +197,6 @@
       align-items: center;
       gap: 16px;
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      position: relative;
     }
 
     .hero-search-card:focus-within {
@@ -221,15 +208,7 @@
     .hero-search-icon {
       font-size: 24px;
       color: var(--primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
       flex-shrink: 0;
-      transition: transform 0.2s;
-    }
-
-    .hero-search-card:focus-within .hero-search-icon {
-      transform: scale(1.1);
     }
 
     .hero-input-area {
@@ -280,7 +259,6 @@
       transform: scale(1.05);
     }
 
-    /* 2-Column Responsive Workspace Grid */
     .workspace-grid {
       display: grid;
       grid-template-columns: 330px 1fr;
@@ -305,7 +283,6 @@
       min-width: 0;
     }
 
-    /* Sleek Floating Filter Inputs */
     .filter-card {
       background: var(--surface);
       backdrop-filter: blur(12px);
@@ -365,7 +342,6 @@
       color: var(--slate-600);
     }
 
-    /* Main Display Glass Panels */
     .glass-panel {
       background: var(--surface-card);
       backdrop-filter: blur(16px);
@@ -417,23 +393,6 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    /* Custom Elegant Scrollbar */
-    .panel-scrollable::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    .panel-scrollable::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    .panel-scrollable::-webkit-scrollbar-thumb {
-      background: var(--slate-300);
-      border-radius: var(--radius-full);
-    }
-    .panel-scrollable::-webkit-scrollbar-thumb:hover {
-      background: var(--slate-400);
-    }
-
-    /* Company List items */
     .company-list {
       list-style: none;
     }
@@ -447,7 +406,6 @@
       justify-content: space-between;
       gap: 12px;
       transition: all 0.15s ease;
-      position: relative;
     }
 
     .company-item:hover {
@@ -490,7 +448,6 @@
       flex-shrink: 0;
     }
 
-    /* SaaS Desktop Table */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -527,7 +484,6 @@
       vertical-align: middle;
     }
 
-    /* 🏷️ Vibrant Modern Pill Badges */
     .badge-code {
       font-family: ui-monospace, monospace;
       font-weight: 700;
@@ -586,7 +542,6 @@
       font-weight: 500;
     }
 
-    /* 🎨 Gorgeous Empty & Waiting State Illustration */
     .aesthetic-prompt {
       padding: 80px 24px;
       text-align: center;
@@ -645,44 +600,6 @@
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
     }
 
-    /* Overlay */
-    #loadingOverlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.4);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      z-index: 10000;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      flex-direction: column;
-      gap: 12px;
-      font-size: 15px;
-      font-weight: 700;
-    }
-
-    .spinner {
-      width: 38px;
-      height: 38px;
-      border: 3.5px solid rgba(255, 255, 255, 0.25);
-      border-top-color: #ffffff;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* =========================================================
-       📱 Mobile Masterpiece Layout (Smartphones <= 960px)
-       Order:
-       1. Hero Buyer Input
-       2. Product Search Box
-       3. Product List Card (Card view)
-       4. Company Search Box
-       5. Company Directory Card
-       ========================================================= */
     @media (max-width: 960px) {
       body {
         padding: 12px 12px 50px;
@@ -727,7 +644,6 @@
         font-size: 14px;
       }
 
-      /* Natural Stack by DOM Order */
       .workspace-grid {
         display: flex;
         flex-direction: column;
@@ -747,7 +663,6 @@
       }
     }
 
-    /* Mobile Table -> Gorgeous Card UI */
     @media (max-width: 768px) {
       #productTable thead {
         display: none;
@@ -823,13 +738,7 @@
 </head>
 <body>
 
-<div id="loadingOverlay">
-  <div class="spinner"></div>
-  <div id="loadingText">데이터를 불러오는 중입니다...</div>
-</div>
-
 <div class="container">
-  <!-- ✨ Header -->
   <header>
     <div class="title-area">
       <h1>
@@ -843,14 +752,13 @@
       </p>
     </div>
     <div class="header-chips">
-      <div class="sync-badge">
+      <div class="sync-badge" id="syncStatusChip">
         <span class="pulse-dot"></span>
         <span id="syncStatusText">동기화 확인 중...</span>
       </div>
     </div>
   </header>
 
-  <!-- 💎 Floating Hero Input -->
   <div class="hero-search-wrapper">
     <div class="hero-search-card">
       <div class="hero-search-icon">🎯</div>
@@ -861,25 +769,14 @@
     </div>
   </div>
 
-  <!-- 🚀 Main Workspace Grid
-       DOM Order:
-       1. Product Search Box
-       2. Product List Panel
-       3. Company Search Box
-       4. Company List Panel
-  -->
   <div class="workspace-grid">
-
-    <!-- [1 & 2] Product Section -->
     <div class="product-section">
-      <!-- 1. 품목명 키워드 검색창 -->
       <div class="filter-card">
         <span class="filter-icon">🔍</span>
         <input type="text" id="productInput" placeholder="품목명 또는 제품코드 검색" autocomplete="off">
         <button class="clear-filter-btn" id="clearProductBtn" onclick="clearProduct()">&times;</button>
       </div>
 
-      <!-- 2. 담당 품목 목록 -->
       <div class="glass-panel">
         <div class="panel-top-bar">
           <div class="panel-heading">
@@ -890,7 +787,6 @@
         </div>
 
         <div class="panel-scrollable">
-          <!-- 최초 클린 안내 화면 -->
           <div id="initialBuyerPrompt" class="aesthetic-prompt">
             <div class="halo-ring">🎯</div>
             <h3>바이어 코드를 입력하세요</h3>
@@ -923,16 +819,13 @@
       </div>
     </div>
 
-    <!-- [3 & 4] Company Section -->
     <div class="company-section">
-      <!-- 3. 회사코드 또는 협력사명 검색창 -->
       <div class="filter-card">
         <span class="filter-icon">🏢</span>
         <input type="text" id="companyInput" placeholder="회사코드 또는 협력사명 검색" autocomplete="off">
         <button class="clear-filter-btn" id="clearCompanyBtn" onclick="clearCompany()">&times;</button>
       </div>
 
-      <!-- 4. 협력사 디렉토리 -->
       <div class="glass-panel">
         <div class="panel-top-bar">
           <div class="panel-heading">
@@ -950,14 +843,10 @@
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
 <script>
-  const defaultVendors = [{"code": "101113", "name": "평택물류센터", "keywords": ["평택물류센터"]}, {"code": "1000007", "name": "(주)조선호텔앤리조트", "keywords": ["(주)조선호텔앤리조트"]}, {"code": "1002269", "name": "대두식품", "keywords": ["대두식품"]}, {"code": "1003465", "name": "주식회사 삼립", "keywords": ["주식회사 삼립"]}, {"code": "1003481", "name": "(주)세미원푸드", "keywords": ["(주)세미원푸드"]}, {"code": "1003528", "name": "(주)랜시푸드", "keywords": ["(주)랜시푸드"]}, {"code": "1003547", "name": "(주)제원인터내쇼날", "keywords": ["(주)제원인터내쇼날"]}, {"code": "1003616", "name": "구스에프앤비(주)", "keywords": ["구스에프앤비(주)"]}, {"code": "1023118", "name": "서울식품공업(주)", "keywords": ["서울식품공업(주)"]}, {"code": "1029291", "name": "(주)케이비아이", "keywords": ["(주)케이비아이"]}, {"code": "1030053", "name": "씨제이푸드빌(주)", "keywords": ["씨제이푸드빌(주)"]}, {"code": "1033942", "name": "주식회사 참조은에스에프", "keywords": ["주식회사 참조은에스에프"]}, {"code": "1034465", "name": "(주)딤섬", "keywords": ["(주)딤섬"]}, {"code": "1034874", "name": "마늘빵집", "keywords": ["마늘빵집"]}, {"code": "1038150", "name": "㈜신라명과", "keywords": ["㈜신라명과"]}, {"code": "1038735", "name": "(주)푸드올마켓", "keywords": ["(주)푸드올마켓"]}, {"code": "1039047", "name": "(주)미송엔터프라이즈", "keywords": ["(주)미송엔터프라이즈"]}, {"code": "1042020", "name": "(주)하나푸드", "keywords": ["(주)하나푸드"]}, {"code": "1042251", "name": "롯데웰푸드(주)", "keywords": ["롯데웰푸드(주)"]}, {"code": "1042988", "name": "(주)선인", "keywords": ["(주)선인"]}, {"code": "1044200", "name": "(주)비에스홀딩스", "keywords": ["(주)비에스홀딩스"]}, {"code": "1046747", "name": "사조대림 영업본부", "keywords": ["사조대림 영업본부"]}, {"code": "1049480", "name": "주식회사 푸드앤바이", "keywords": ["주식회사 푸드앤바이"]}, {"code": "1053630", "name": "주식회사 투민로직스", "keywords": ["주식회사 투민로직스"]}, {"code": "1100978", "name": "(주)이지웨이", "keywords": ["(주)이지웨이"]}, {"code": "1101606", "name": "(주)씨에스아이팩토리", "keywords": ["(주)씨에스아이팩토리"]}, {"code": "1102026", "name": "로빈스프렌즈 주식회사", "keywords": ["로빈스프렌즈 주식회사"]}, {"code": "1102493", "name": "ARYZTA FOOD SOLUTIONS JAPAN CO LTD", "keywords": ["ARYZTA FOOD SOLUTIONS JAPAN CO LTD"]}, {"code": "1103247", "name": "(주)바로군", "keywords": ["(주)바로군"]}, {"code": "1103568", "name": "(주)디엔비", "keywords": ["(주)디엔비"]}, {"code": "1104385", "name": "(주)비엘컴퍼니", "keywords": ["(주)비엘컴퍼니"]}, {"code": "1104704", "name": "(주)이정파트너스", "keywords": ["(주)이정파트너스"]}, {"code": "1104768", "name": "(주)대광푸드", "keywords": ["(주)대광푸드"]}, {"code": "1104980", "name": "(주)다인경주빵", "keywords": ["(주)다인경주빵"]}, {"code": "1105658", "name": "(주)한설당", "keywords": ["(주)한설당"]}, {"code": "1106186", "name": "(주)파리크라상", "keywords": ["(주)파리크라상"]}, {"code": "1106788", "name": "(주)더브레드블루", "keywords": ["(주)더브레드블루"]}];
-  const defaultProducts = [{"code": "320249", "name": "스윗 부드러운 또띠아 10인치 SPC삼립 50G*12개*10봉, 10인치", "vendor_codes": ["101113", "1003465"], "buyer_code": "B101"}, {"code": "325960", "name": "탕종 세사미 베이글 로빈스프렌즈 99G, 슬라이스", "vendor_codes": ["101113", "1102026"], "buyer_code": "B102"}, {"code": "339002", "name": "크랜베리스콘 디엔비 55G*40개", "vendor_codes": ["101113", "1103568"], "buyer_code": "B103"}, {"code": "339633", "name": "SB크로와상번 서울식품공업 60G*12개*3팩, 슬라이스", "vendor_codes": ["101113", "1023118"], "buyer_code": "B104"}, {"code": "341968", "name": "밀크앤허니 치즈베이글 로빈스프렌즈 100G*4개", "vendor_codes": ["101113", "1102026"], "buyer_code": "B101"}, {"code": "341969", "name": "밀크앤허니 탕종 통밀베이글 로빈스프렌즈 95G*4개", "vendor_codes": ["101113", "1102026"], "buyer_code": "B102"}, {"code": "341970", "name": "밀크앤허니 탕종 플레인베이글 로빈스프렌즈 95G*4개", "vendor_codes": ["101113", "1102026"], "buyer_code": "B103"}, {"code": "342058", "name": "클래식 화이트 피타 엔젤베이커리 100G*60개", "vendor_codes": ["101113", "1104704"], "buyer_code": "B104"}, {"code": "342336", "name": "식물성크림빵 (오리지날) 디엔비 100G*18개", "vendor_codes": ["101113", "1103568"], "buyer_code": "B101"}, {"code": "342337", "name": "식물성크림빵(딸기) 디엔비 100G*18개", "vendor_codes": ["101113", "1103568"], "buyer_code": "B102"}, {"code": "342338", "name": "식물성크림빵(초코) 디엔비 100G*18개", "vendor_codes": ["101113", "1103568"], "buyer_code": "B103"}, {"code": "344010", "name": "고구마피자빵 디엔비 60G*30개", "vendor_codes": ["101113", "1103568"], "buyer_code": "B104"}, {"code": "344011", "name": "오리지널피자빵 디엔비 60G*30개", "vendor_codes": ["101113", "1103568"], "buyer_code": "B101"}, {"code": "344093", "name": "클래식 화이트 피타 엔젤베이커리 100G", "vendor_codes": ["101113", "1104704"], "buyer_code": "B102"}, {"code": "344430", "name": "수제 우리밀 초코파이 피스타치오 영푸드시스템 30G*30개", "vendor_codes": ["101113", "1104768"], "buyer_code": "B103"}, {"code": "344431", "name": "수제 우리밀 초코파이 영푸드시스템 30G*30개", "vendor_codes": ["101113", "1104768"], "buyer_code": "B104"}, {"code": "346946", "name": "베키아에누보 고단백 통밀 미니베이글 50G*8개", "vendor_codes": ["101113", "1003616"], "buyer_code": "B101"}, {"code": "346947", "name": "베키아에누보 고단백 세서미 미니베이글 50G*8개", "vendor_codes": ["101113", "1003616"], "buyer_code": "B102"}, {"code": "347034", "name": "십자가빵 아리스타 550G*12개", "vendor_codes": ["101113", "1102493"], "buyer_code": "B103"}, {"code": "347736", "name": "콘브레드 디엔비 100G*3개*16팩", "vendor_codes": ["101113", "1103568"], "buyer_code": "B104"}, {"code": "347737", "name": "우유모닝롤 디엔비 30G*8개*12팩", "vendor_codes": ["101113", "1103568"], "buyer_code": "B101"}, {"code": "347738", "name": "올리브모닝롤 디엔비 30G*8개*12팩", "vendor_codes": ["101113", "1103568"], "buyer_code": "B102"}, {"code": "347739", "name": "야채모닝롤 디엔비 30G*8개*12팩", "vendor_codes": ["101113", "1103568"], "buyer_code": "B103"}, {"code": "347740", "name": "단팥소보루빵 디엔비 100G*3개*12팩", "vendor_codes": ["101113", "1103568"], "buyer_code": "B104"}, {"code": "347741", "name": "백단팥빵 디엔비 85G*3개*12팩", "vendor_codes": ["101113", "1103568"], "buyer_code": "B101"}, {"code": "347742", "name": "완두앙금빵 디엔비 85G*3개*12팩", "vendor_codes": ["101113", "1103568"], "buyer_code": "B102"}, {"code": "347743", "name": "단팥빵 디엔비 85G*3개*12팩", "vendor_codes": ["101113", "1103568"], "buyer_code": "B103"}, {"code": "348802", "name": "조선호텔 앙금빵 코리아식품 260G, 65G*4개", "vendor_codes": ["101113", "1000007"], "buyer_code": "B104"}, {"code": "349420", "name": "신세계라운지 미니 소금빵 비엘컴퍼니 38G*24개", "vendor_codes": ["101113", "1104385"], "buyer_code": "B101"}, {"code": "349448", "name": "신세계푸드 딸기우유생크림빵 50G*20개", "vendor_codes": ["101113", "1042020"], "buyer_code": "B102"}, {"code": "349996", "name": "신세계라운지 말차만쥬 대두식품 35G*60개", "vendor_codes": ["101113", "1002269"], "buyer_code": "B103"}, {"code": "349998", "name": "신세계라운지 구운빵이구마 대두식품 85G*27개", "vendor_codes": ["101113", "1002269"], "buyer_code": "B104"}, {"code": "350002", "name": "신세계라운지 땅콩가득빵 화과방 50G*56개", "vendor_codes": ["101113", "1002269"], "buyer_code": "B101"}, {"code": "350208", "name": "찰보리빵 다인경주빵 30G*100개", "vendor_codes": ["101113", "1104980"], "buyer_code": "B102"}, {"code": "350209", "name": "경주빵 다인경주빵 38G*100개", "vendor_codes": ["101113", "1104980"], "buyer_code": "B103"}, {"code": "350481", "name": "국군의날 수제 우리밀 초코파이 피스타치오 영푸드시스템 30G*30개", "vendor_codes": ["101113", "1104768"], "buyer_code": "B104"}, {"code": "350511", "name": "신세계푸드 우유생크림빵 50G*24개", "vendor_codes": ["101113", "1042020"], "buyer_code": "B101"}, {"code": "350512", "name": "신세계푸드 딸기우유생크림빵 50G*24개", "vendor_codes": ["101113", "1042020"], "buyer_code": "B102"}, {"code": "351213", "name": "미니초코바게트 바로군 40G*25개*5팩", "vendor_codes": ["101113", "1103247"], "buyer_code": "B103"}, {"code": "351503", "name": "호떡 한설당 65G*50개", "vendor_codes": ["101113", "1105658"], "buyer_code": "B104"}, {"code": "351504", "name": "버터크로와상 한설당 35G*35개", "vendor_codes": ["101113", "1105658"], "buyer_code": "B101"}, {"code": "352164", "name": "롤치즈브레드 서울식품공업 30G*36개", "vendor_codes": ["101113", "1023118"], "buyer_code": "B102"}, {"code": "352665", "name": "플레인스콘 씨에스아이팩토리 40G*18개", "vendor_codes": ["101113", "1101606"], "buyer_code": "B103"}, {"code": "352926", "name": "모카찰떡 초코파이 참조은에스에프 60G*54개", "vendor_codes": ["101113", "1033942"], "buyer_code": "B104"}, {"code": "250946", "name": "바질스콘 대두식품 45G*16개", "vendor_codes": ["1002269"], "buyer_code": "B101"}, {"code": "336030", "name": "진짜 감자빵 대두식품 90G*15개*4팩", "vendor_codes": ["1002269"], "buyer_code": "B102"}, {"code": "336031", "name": "진짜 고구마빵 대두식품 90G*15개*4팩", "vendor_codes": ["1002269"], "buyer_code": "B103"}, {"code": "339968", "name": "소프트원 초코 대두식품 50G*28개", "vendor_codes": ["1002269"], "buyer_code": "B104"}, {"code": "339969", "name": "소프트원 녹차 대두식품 50G*28개", "vendor_codes": ["1002269"], "buyer_code": "B101"}, {"code": "339970", "name": "구운도넛밤빵 대두식품 60G*45개", "vendor_codes": ["1002269"], "buyer_code": "B102"}, {"code": "339971", "name": "구운도넛팥빵 대두식품 60G*45개", "vendor_codes": ["1002269"], "buyer_code": "B103"}, {"code": "339972", "name": "고구마앙빵 대두식품 35G*60개", "vendor_codes": ["1002269"], "buyer_code": "B104"}, {"code": "12172", "name": "골드버터롤 SPC삼립 360G", "vendor_codes": ["1003465"], "buyer_code": "B101"}, {"code": "45153", "name": "화이트치아바타 SPC삼립 70G*6개", "vendor_codes": ["1003465"], "buyer_code": "B102"}, {"code": "48098", "name": "허니버터브래드 SPC삼립 1.4KG", "vendor_codes": ["1003465"], "buyer_code": "B103"}, {"code": "56258", "name": "정통크림빵 SPC삼립 70G", "vendor_codes": ["1003465"], "buyer_code": "B104"}, {"code": "65667", "name": "허니브레드 SPC삼립 150G*2개*4팩", "vendor_codes": ["1003465"], "buyer_code": "B101"}, {"code": "85117", "name": "아침미소토스트 SPC삼립 700G", "vendor_codes": ["1003465"], "buyer_code": "B102"}, {"code": "149164", "name": "쫄깃한잉글리쉬머핀 SPC삼립 60G*4개", "vendor_codes": ["1003465"], "buyer_code": "B103"}, {"code": "149455", "name": "주종단팥크림빵 SPC삼립 100G", "vendor_codes": ["1003465"], "buyer_code": "B104"}, {"code": "159100", "name": "크루통 SPC삼립 1KG*2개", "vendor_codes": ["1003465"], "buyer_code": "B101"}, {"code": "194371", "name": "요요꿀호떡 SPC삼립 25G*16개", "vendor_codes": ["1003465"], "buyer_code": "B102"}, {"code": "194372", "name": "옛날꿀호떡 SPC삼립 57G*9개", "vendor_codes": ["1003465"], "buyer_code": "B103"}, {"code": "203295", "name": "꼬마단팥호빵 SPC삼립 40G*6개", "vendor_codes": ["1003465"], "buyer_code": "B104"}, {"code": "210246", "name": "꼬마야채호빵 SPC삼립 40G*6개", "vendor_codes": ["1003465"], "buyer_code": "B101"}, {"code": "226160", "name": "소프트프랑스S 바게트 SPC삼립 50G*10개", "vendor_codes": ["1003465"], "buyer_code": "B102"}, {"code": "233288", "name": "버터롤클래식 SPC삼립 546G", "vendor_codes": ["1003465"], "buyer_code": "B103"}, {"code": "248626", "name": "미각제빵소 초코소라빵 SPC삼립 80G", "vendor_codes": ["1003465"], "buyer_code": "B104"}, {"code": "255310", "name": "모닝바게트-에스 SPC삼립 185G*5개", "vendor_codes": ["1003465"], "buyer_code": "B101"}, {"code": "311541", "name": "더블치즈후레쉬팡 SPC삼립 98G", "vendor_codes": ["1003465"], "buyer_code": "B102"}, {"code": "311542", "name": "땅콩콕콕꿀호떡 SPC삼립 138G", "vendor_codes": ["1003465"], "buyer_code": "B103"}, {"code": "311574", "name": "발효스트로베리데니쉬 SPC삼립 100G", "vendor_codes": ["1003465"], "buyer_code": "B104"}, {"code": "311575", "name": "뉴정통밤만쥬 SPC삼립 23G*100개", "vendor_codes": ["1003465"], "buyer_code": "B101"}, {"code": "311576", "name": "리뉴얼 주종 슈크림빵 SPC삼립 90G", "vendor_codes": ["1003465"], "buyer_code": "B102"}, {"code": "311579", "name": "탕종빅땅콩샌드 SPC삼립 160G", "vendor_codes": ["1003465"], "buyer_code": "B103"}, {"code": "322408", "name": "브라운브레드 SPC삼립 60G", "vendor_codes": ["1003465"], "buyer_code": "B104"}, {"code": "326646", "name": "정통단팥빵 SPC삼립 85G", "vendor_codes": ["1003465"], "buyer_code": "B101"}, {"code": "326647", "name": "정통크림빵 SPC삼립 75G", "vendor_codes": ["1003465"], "buyer_code": "B102"}, {"code": "326648", "name": "발효버터 빅스위트데니쉬 SPC삼립 100G", "vendor_codes": ["1003465"], "buyer_code": "B103"}, {"code": "343450", "name": "정통모닝빵 SPC삼립 270G*8팩", "vendor_codes": ["1003465"], "buyer_code": "B104"}, {"code": "352803", "name": "펄슈가 벨지안미니와플 에스피씨삼립 30G*20개", "vendor_codes": ["1003465"], "buyer_code": "B101"}, {"code": "10938", "name": "이솝찐빵 세미원 25G*40개", "vendor_codes": ["1003481"], "buyer_code": "B102"}, {"code": "200635", "name": "갈릭버터난 세미원푸드 50G*20개", "vendor_codes": ["1003481"], "buyer_code": "B103"}, {"code": "208534", "name": "수제꽃빵 세미원푸드 30G*30개", "vendor_codes": ["1003481"], "buyer_code": "B104"}, {"code": "340327", "name": "중화번 QING BAIFU FOOD 35G*30개", "vendor_codes": ["1003481"], "buyer_code": "B101"}, {"code": "341171", "name": "숲속친구들 찐빵 세미원푸드 25G*40개", "vendor_codes": ["1003481"], "buyer_code": "B102"}, {"code": "341172", "name": "바다친구들 찐빵 세미원푸드 25G*40개", "vendor_codes": ["1003481"], "buyer_code": "B103"}, {"code": "352578", "name": "미션 콘또띠아 세미원푸드 14.18G*60개, 6인치", "vendor_codes": ["1003481"], "buyer_code": "B104"}, {"code": "352579", "name": "미션 피타브레드 세미원푸드 80G*5개, 6인치", "vendor_codes": ["1003481"], "buyer_code": "B101"}, {"code": "352580", "name": "플레이난 세미원푸드 70G*5개", "vendor_codes": ["1003481"], "buyer_code": "B102"}, {"code": "188033", "name": "꽃빵 랜시푸드 30G*50개", "vendor_codes": ["1003528"], "buyer_code": "B103"}, {"code": "228543", "name": "바게트 제원인터내쇼날 280G*25개", "vendor_codes": ["1003547"], "buyer_code": "B104"}, {"code": "338568", "name": "대파스콘 청솔식품 55G*72개", "vendor_codes": ["1003547"], "buyer_code": "B101"}, {"code": "340979", "name": "크로아상 40G 브리도 40G*165개", "vendor_codes": ["1003547"], "buyer_code": "B102"}, {"code": "345446", "name": "유자스콘 문식품 50G*64개", "vendor_codes": ["1003547"], "buyer_code": "B103"}, {"code": "347975", "name": "뺑 세레알 BRIDOR 450G*16개", "vendor_codes": ["1003547"], "buyer_code": "B104"}, {"code": "350571", "name": "르 꽁플레 BRIDOR 330G*26개", "vendor_codes": ["1003547"], "buyer_code": "B101"}, {"code": "352841", "name": "스페셜 무화과&허니롤 PANIDOR 33G*250개", "vendor_codes": ["1003547"], "buyer_code": "B102"}, {"code": "344670", "name": "어니언 베이글 베이글코리아 110G*6개", "vendor_codes": ["1003616"], "buyer_code": "B103"}, {"code": "344671", "name": "블루베리 베이글 베이글코리아 110G*6개", "vendor_codes": ["1003616"], "buyer_code": "B104"}, {"code": "344672", "name": "플레인 베이글B 베이글코리아 110G*6개", "vendor_codes": ["1003616"], "buyer_code": "B101"}, {"code": "346487", "name": "모짜렐라치즈 베이글 베이글코리아 120G*6개", "vendor_codes": ["1003616"], "buyer_code": "B102"}, {"code": "351323", "name": "밀크앤허니 어니언모닝베이글 110G*5개", "vendor_codes": ["1003616"], "buyer_code": "B103"}, {"code": "352165", "name": "크로와상번 서울식품공업 60G*6개*6팩", "vendor_codes": ["1023118"], "buyer_code": "B104"}, {"code": "95147", "name": "물류)또즈랑 밀또띠아 남향푸드또띠아 700G*10팩, 9호", "vendor_codes": ["1029291"], "buyer_code": "B101"}, {"code": "142009", "name": "평면씬크러스트피자도우 12인치 대경푸드 180G*5개", "vendor_codes": ["1029291"], "buyer_code": "B102"}, {"code": "256331", "name": "또즈랑 밀또띠아 남향푸드또띠아 65G*12개, 10호", "vendor_codes": ["1029291"], "buyer_code": "B103"}, {"code": "320300", "name": "화덕피자도우12인치 뉴태리푸드 300G*10개*2팩", "vendor_codes": ["1029291"], "buyer_code": "B104"}, {"code": "55573", "name": "슈크림빵 CJ푸드빌 75G", "vendor_codes": ["1030053"], "buyer_code": "B101"}, {"code": "159099", "name": "미니치즈롤인 CJ푸드빌 80G", "vendor_codes": ["1030053"], "buyer_code": "B102"}, {"code": "200638", "name": "겹겹이치즈스틱 CJ푸드빌 120G", "vendor_codes": ["1030053"], "buyer_code": "B103"}, {"code": "220900", "name": "신선해고소해후레쉬크림빵 CJ푸드빌 62G", "vendor_codes": ["1030053"], "buyer_code": "B104"}, {"code": "220901", "name": "맛보로소보로 CJ푸드빌 66G", "vendor_codes": ["1030053"], "buyer_code": "B101"}, {"code": "220902", "name": "팥이빵빵단팥빵 CJ푸드빌 86G", "vendor_codes": ["1030053"], "buyer_code": "B102"}, {"code": "220903", "name": "완두가득완두앙금빵 CJ푸드빌 75G", "vendor_codes": ["1030053"], "buyer_code": "B103"}, {"code": "220904", "name": "진짜고소한땅콩크림빵 CJ푸드빌 67G", "vendor_codes": ["1030053"], "buyer_code": "B104"}, {"code": "225892", "name": "겹겹이밀크롤인 CJ푸드빌 19.750G*8개", "vendor_codes": ["1030053"], "buyer_code": "B101"}, {"code": "252409", "name": "한입두입미니단팥빵 씨제이푸드빌 160G", "vendor_codes": ["1030053"], "buyer_code": "B102"}, {"code": "333318", "name": "샤샤핑이 좋아하는 미니샌드 연유 CJ푸드빌 65G", "vendor_codes": ["1030053"], "buyer_code": "B103"}, {"code": "333319", "name": "말랑핑이 좋아하는 미니샌드 스트로베리 CJ푸드빌 65G", "vendor_codes": ["1030053"], "buyer_code": "B104"}, {"code": "339381", "name": "오븐에구운 초코칩링도넛 씨제이푸드빌 35G", "vendor_codes": ["1030053"], "buyer_code": "B101"}, {"code": "339382", "name": "오븐에구운 버터링도넛 씨제이푸드빌 35G", "vendor_codes": ["1030053"], "buyer_code": "B102"}, {"code": "339383", "name": "땅콩크림 소보로빵 씨제이푸드빌 95G", "vendor_codes": ["1030053"], "buyer_code": "B103"}, {"code": "346465", "name": "치즈만난감자그라탕 CJ푸드빌 88G*27개", "vendor_codes": ["1030053"], "buyer_code": "B104"}, {"code": "346466", "name": "트리플치즈방앗간 CJ푸드빌 88G*27개", "vendor_codes": ["1030053"], "buyer_code": "B101"}, {"code": "348165", "name": "우유스틱 브레드 CJ푸드빌 90G", "vendor_codes": ["1030053"], "buyer_code": "B102"}, {"code": "349446", "name": "신선해달콤해초코크림빵 CJ푸드빌 62G", "vendor_codes": ["1030053"], "buyer_code": "B103"}, {"code": "352515", "name": "신선해상큼해딸기크림빵 씨제이푸드빌 62G", "vendor_codes": ["1030053"], "buyer_code": "B104"}, {"code": "353603", "name": "사과잼소보로빵 씨케이하우스 90G", "vendor_codes": ["1030053"], "buyer_code": "B101"}, {"code": "353634", "name": "달콤꿀호떡 씨제이푸드빌 95G", "vendor_codes": ["1030053"], "buyer_code": "B102"}, {"code": "340266", "name": "말차생크림빵 참조은에스에프 65G*48개", "vendor_codes": ["1033942"], "buyer_code": "B103"}, {"code": "340267", "name": "우유생크림빵 참조은에스에프 65G*48개", "vendor_codes": ["1033942"], "buyer_code": "B104"}, {"code": "172912", "name": "가리비형화권 딤섬 30G*40개", "vendor_codes": ["1034465"], "buyer_code": "B101"}, {"code": "182785", "name": "꽃빵 딤섬 30G*50개", "vendor_codes": ["1034465"], "buyer_code": "B102"}, {"code": "215439", "name": "애플파이 딤섬 15G*30개", "vendor_codes": ["1034465"], "buyer_code": "B103"}, {"code": "237801", "name": "밀크앤허니 바삭한마늘바게트 350G", "vendor_codes": ["1034874"], "buyer_code": "B104"}, {"code": "347591", "name": "옛날단팥빵 신라명과 50G*10개*5팩", "vendor_codes": ["1038150"], "buyer_code": "B101"}, {"code": "350174", "name": "속이 꽉 찬 단팥빵 신라명과 80G*12개", "vendor_codes": ["1038150"], "buyer_code": "B102"}, {"code": "13565", "name": "또즈랑 밀또띠아 남향푸드또띠아 240G, 6호", "vendor_codes": ["1038735"], "buyer_code": "B103"}, {"code": "13569", "name": "또띠아 10인치 글로벌YK 790G*12팩", "vendor_codes": ["1038735"], "buyer_code": "B104"}, {"code": "45912", "name": "또즈랑 밀또띠아 남향푸드또띠아 496G, 8호", "vendor_codes": ["1038735"], "buyer_code": "B101"}, {"code": "259476", "name": "라레이나 밀또띠아 글로벌YK 340G*24개", "vendor_codes": ["1038735"], "buyer_code": "B102"}, {"code": "169032", "name": "크림치즈프레즐 미송엔터프라이즈 99G*8개*6팩", "vendor_codes": ["1039047"], "buyer_code": "B103"}, {"code": "314818", "name": "SW 소프트 바게트 하나푸드 65G*4개*11팩, 슬라이스", "vendor_codes": ["1042020"], "buyer_code": "B104"}, {"code": "160165", "name": "옥수수모닝빵 롯데제과 360G", "vendor_codes": ["1042251"], "buyer_code": "B101"}, {"code": "160166", "name": "허니크림빵 롯데제과 90G", "vendor_codes": ["1042251"], "buyer_code": "B102"}, {"code": "160171", "name": "꼬마꿀호떡 롯데제과 22G*5개", "vendor_codes": ["1042251"], "buyer_code": "B103"}, {"code": "160172", "name": "팥크림빵 롯데제과 90G", "vendor_codes": ["1042251"], "buyer_code": "B104"}, {"code": "160173", "name": "투투호떡 롯데제과 60G*2개", "vendor_codes": ["1042251"], "buyer_code": "B101"}, {"code": "160178", "name": "왕만쥬 롯데제과 95G", "vendor_codes": ["1042251"], "buyer_code": "B102"}, {"code": "160188", "name": "단팥가득만족두배 단팥빵 롯데제과 105G", "vendor_codes": ["1042251"], "buyer_code": "B103"}, {"code": "160189", "name": "달콤한땅콩소보로 롯데제과 90G", "vendor_codes": ["1042251"], "buyer_code": "B104"}, {"code": "160190", "name": "달콤한갈릭소보로 롯데제과 100G", "vendor_codes": ["1042251"], "buyer_code": "B101"}, {"code": "219164", "name": "빅단팥빵 롯데제과 105G", "vendor_codes": ["1042251"], "buyer_code": "B102"}, {"code": "224153", "name": "크로와상 롯데제과 증평 40G", "vendor_codes": ["1042251"], "buyer_code": "B103"}, {"code": "232407", "name": "달콤한정통만쥬 롯데제과 30G*10개", "vendor_codes": ["1042251"], "buyer_code": "B104"}, {"code": "234549", "name": "이천쌀슈크림 롯데제과 90G", "vendor_codes": ["1042251"], "buyer_code": "B101"}, {"code": "311740", "name": "미니소보로 롯데제과 375G", "vendor_codes": ["1042251"], "buyer_code": "B102"}, {"code": "311741", "name": "한입쏙미니만쥬 롯데제과 350G", "vendor_codes": ["1042251"], "buyer_code": "B103"}, {"code": "314751", "name": "고소한옥수수단팥빵 롯데제과 105G", "vendor_codes": ["1042251"], "buyer_code": "B104"}, {"code": "314752", "name": "빅단팥슈크림빵 롯데제과 105G", "vendor_codes": ["1042251"], "buyer_code": "B101"}, {"code": "314755", "name": "롱패스츄리 롯데제과 증평 110G", "vendor_codes": ["1042251"], "buyer_code": "B102"}, {"code": "314756", "name": "리얼카스타드슈크림빵 롯데제과 125G", "vendor_codes": ["1042251"], "buyer_code": "B103"}, {"code": "314757", "name": "미니딸기샌드 롯데제과 증평 65G", "vendor_codes": ["1042251"], "buyer_code": "B104"}, {"code": "314758", "name": "미니땅콩샌드 롯데제과 증평 65G", "vendor_codes": ["1042251"], "buyer_code": "B101"}, {"code": "314761", "name": "프리미엄슈크림패스츄리 롯데제과 증평 100G", "vendor_codes": ["1042251"], "buyer_code": "B102"}, {"code": "314762", "name": "프리미엄초코소보로패스츄리 롯데제과 증평 100G", "vendor_codes": ["1042251"], "buyer_code": "B103"}, {"code": "316872", "name": "프리미엄 소프트 땅콩샌드 롯데제과 160G", "vendor_codes": ["1042251"], "buyer_code": "B104"}, {"code": "318179", "name": "기린 고구마 크림빵 롯데제과 90G", "vendor_codes": ["1042251"], "buyer_code": "B101"}, {"code": "197296", "name": "피타브레드 선인 70G*6개*24팩", "vendor_codes": ["1042988"], "buyer_code": "B102"}, {"code": "317191", "name": "또띠아 12인치 시그니쳐 인터네셔날푸드 97G*12개*12팩, 12인치", "vendor_codes": ["1042988"], "buyer_code": "B103"}, {"code": "316391", "name": "할리스 하트파이 유로베이커리 80G*6개", "vendor_codes": ["1044200"], "buyer_code": "B104"}, {"code": "319357", "name": "한입에마늘바게트 한영식품 2KG*2개", "vendor_codes": ["1044200"], "buyer_code": "B101"}, {"code": "324498", "name": "데니쉬식빵 145G*6개", "vendor_codes": ["1044200"], "buyer_code": "B102"}, {"code": "325162", "name": "버터버터 16결 식빵 60G*8개", "vendor_codes": ["1044200"], "buyer_code": "B103"}, {"code": "343049", "name": "갈레트 브루통 핀브레드 25G*28개*12팩", "vendor_codes": ["1044200"], "buyer_code": "B104"}, {"code": "346144", "name": "프리미엄 크로플 더다경 45G*10개", "vendor_codes": ["1044200"], "buyer_code": "B101"}, {"code": "346309", "name": "팔미에 유로베이커리 72G*8개", "vendor_codes": ["1044200"], "buyer_code": "B102"}, {"code": "350645", "name": "미니 데니쉬 브레드 비엘컴퍼니 60G*8개*2팩", "vendor_codes": ["1044200"], "buyer_code": "B103"}, {"code": "351619", "name": "하트파이 유로베이커리 80G*6개", "vendor_codes": ["1044200"], "buyer_code": "B104"}, {"code": "351620", "name": "몰티즈 하트파이 유로베이커리 72G*6개", "vendor_codes": ["1044200"], "buyer_code": "B101"}, {"code": "352466", "name": "플레인 하트팔미에 유로베이커리 56G*6개", "vendor_codes": ["1044200"], "buyer_code": "B102"}, {"code": "352747", "name": "크림브리오슈 성진에프에스 34G*12개*2팩", "vendor_codes": ["1044200"], "buyer_code": "B103"}, {"code": "352748", "name": "미니크로와상 성진에프에스 17G*15개*2팩", "vendor_codes": ["1044200"], "buyer_code": "B104"}, {"code": "353279", "name": "텐퍼센트 하트파이 유로베이커리 60G*6개", "vendor_codes": ["1044200"], "buyer_code": "B101"}, {"code": "261440", "name": "옛날붕어빵 슈크림 사조대림 400G", "vendor_codes": ["1046747"], "buyer_code": "B102"}, {"code": "261441", "name": "옛날붕어빵 단팥 사조대림 800G", "vendor_codes": ["1046747"], "buyer_code": "B103"}, {"code": "12298", "name": "꽃빵 세미식품 35G*40개", "vendor_codes": ["1049480"], "buyer_code": "B104"}, {"code": "13563", "name": "또띠아 12인치 글로벌YK 1.020KG", "vendor_codes": ["1049480"], "buyer_code": "B101"}, {"code": "64295", "name": "콘또띠아 6인치 글로벌YK 990G", "vendor_codes": ["1049480"], "buyer_code": "B102"}, {"code": "198760", "name": "안흥찐빵 안흥찐빵마을 50G*10개", "vendor_codes": ["1049480"], "buyer_code": "B103"}, {"code": "344891", "name": "꽃빵 하이얀식품 30G*50개", "vendor_codes": ["1049480"], "buyer_code": "B104"}, {"code": "314051", "name": "오쉐프 미니베이글 플레인 오뚜기 900G", "vendor_codes": ["1053630"], "buyer_code": "B101"}, {"code": "319372", "name": "브라운브레드 SPC삼립 60G*30개", "vendor_codes": ["1100978"], "buyer_code": "B102"}, {"code": "318397", "name": "스타벅스 탕종플레인베이글 90G", "vendor_codes": ["1102026"], "buyer_code": "B103"}, {"code": "318398", "name": "스타벅스 탕종블루베리베이글 90G", "vendor_codes": ["1102026"], "buyer_code": "B104"}, {"code": "325959", "name": "탕종 올리브 베이글 로빈스프렌즈 94G, 슬라이스", "vendor_codes": ["1102026"], "buyer_code": "B101"}, {"code": "255770", "name": "밀크앤허니 우유모닝롤 408G", "vendor_codes": ["1103247"], "buyer_code": "B102"}, {"code": "339858", "name": "고로케번 디앤비 60G*10개", "vendor_codes": ["1103568"], "buyer_code": "B103"}, {"code": "332104", "name": "미스베어 파리크라상 30G*5개", "vendor_codes": ["1106186"], "buyer_code": "B104"}, {"code": "332105", "name": "미스터베어 파리크라상 30G*5개", "vendor_codes": ["1106186"], "buyer_code": "B101"}, {"code": "332106", "name": "단팥빵 파리크라상 85G", "vendor_codes": ["1106186"], "buyer_code": "B102"}, {"code": "332107", "name": "달콤연유 크림브레드 파리크라상 64G", "vendor_codes": ["1106186"], "buyer_code": "B103"}, {"code": "332108", "name": "땅콩크림빵 파리크라상 68G", "vendor_codes": ["1106186"], "buyer_code": "B104"}, {"code": "332109", "name": "모카크림빵 파리크라상 56G", "vendor_codes": ["1106186"], "buyer_code": "B101"}, {"code": "332111", "name": "소보루빵 파리크라상 80G", "vendor_codes": ["1106186"], "buyer_code": "B102"}, {"code": "332112", "name": "슈크림빵 파리크라상 75G", "vendor_codes": ["1106186"], "buyer_code": "B103"}, {"code": "332113", "name": "초코소라빵 파리크라상 65G", "vendor_codes": ["1106186"], "buyer_code": "B104"}, {"code": "332115", "name": "한입에 두번반한 단팥크림빵 파리크라상 92G", "vendor_codes": ["1106186"], "buyer_code": "B101"}, {"code": "332117", "name": "고소한 버터 핑거스틱 파리크라상 100G", "vendor_codes": ["1106186"], "buyer_code": "B102"}, {"code": "337689", "name": "부드러운 후레쉬크림빵 파리크라상 84G", "vendor_codes": ["1106186"], "buyer_code": "B103"}, {"code": "342559", "name": "굿모닝롤 파리크라상 240G", "vendor_codes": ["1106186"], "buyer_code": "B104"}, {"code": "342564", "name": "순수우유후레쉬번 파리크라상 160G", "vendor_codes": ["1106186"], "buyer_code": "B101"}, {"code": "352523", "name": "루스틱치아바타 더브레드블루 75G*50개", "vendor_codes": ["1106788"], "buyer_code": "B102"}];
-
   let vendors = [];
   let products = [];
   let vendorMap = new Map();
@@ -979,7 +868,8 @@
     const bInput = document.getElementById('buyerInput');
     if (bInput) {
       bInput.addEventListener('input', (e) => {
-        document.getElementById('clearBuyerBtn').style.display = e.target.value ? 'flex' : 'none';
+        const btn = document.getElementById('clearBuyerBtn');
+        if (btn) btn.style.display = e.target.value ? 'flex' : 'none';
         debounceFilter();
       });
     }
@@ -987,7 +877,8 @@
     const cInput = document.getElementById('companyInput');
     if (cInput) {
       cInput.addEventListener('input', (e) => {
-        document.getElementById('clearCompanyBtn').style.display = e.target.value ? 'block' : 'none';
+        const btn = document.getElementById('clearCompanyBtn');
+        if (btn) btn.style.display = e.target.value ? 'block' : 'none';
         selectedVendorCode = null;
         debounceFilter();
       });
@@ -996,7 +887,8 @@
     const pInput = document.getElementById('productInput');
     if (pInput) {
       pInput.addEventListener('input', (e) => {
-        document.getElementById('clearProductBtn').style.display = e.target.value ? 'block' : 'none';
+        const btn = document.getElementById('clearProductBtn');
+        if (btn) btn.style.display = e.target.value ? 'block' : 'none';
         debounceFilter();
       });
     }
@@ -1004,36 +896,27 @@
 
   function clearBuyer() {
     const bInput = document.getElementById('buyerInput');
-    bInput.value = '';
-    document.getElementById('clearBuyerBtn').style.display = 'none';
+    if (bInput) bInput.value = '';
+    const btn = document.getElementById('clearBuyerBtn');
+    if (btn) btn.style.display = 'none';
     filterAndRender();
   }
 
   function clearCompany() {
     const cInput = document.getElementById('companyInput');
-    cInput.value = '';
-    document.getElementById('clearCompanyBtn').style.display = 'none';
+    if (cInput) cInput.value = '';
+    const btn = document.getElementById('clearCompanyBtn');
+    if (btn) btn.style.display = 'none';
     selectedVendorCode = null;
     filterAndRender();
   }
 
   function clearProduct() {
     const pInput = document.getElementById('productInput');
-    pInput.value = '';
-    document.getElementById('clearProductBtn').style.display = 'none';
+    if (pInput) pInput.value = '';
+    const btn = document.getElementById('clearProductBtn');
+    if (btn) btn.style.display = 'none';
     filterAndRender();
-  }
-
-  function showLoading(msg) {
-    const el = document.getElementById('loadingText');
-    if (el) el.innerText = msg || "데이터를 불러오는 중입니다...";
-    const overlay = document.getElementById('loadingOverlay');
-    if (overlay) overlay.style.display = 'flex';
-  }
-
-  function hideLoading() {
-    const overlay = document.getElementById('loadingOverlay');
-    if (overlay) overlay.style.display = 'none';
   }
 
   function rebuildVendorIndexes() {
@@ -1060,7 +943,7 @@
     const chip = document.getElementById('syncStatusChip');
     const dot = chip ? chip.querySelector('.pulse-dot') : null;
 
-    if (statusText) statusText.innerText = 'data.csv 동기화 확인 중...';
+    if (statusText) statusText.innerText = '동기화 확인 중...';
 
     try {
       const response = await fetch('data.csv?_t=' + Date.now(), { cache: 'no-store' });
@@ -1069,29 +952,26 @@
         const rows = parseRFC4180CSV(csvText);
         if (rows && rows.length > 1) {
           const loadedCount = parseAndApplyServerRows(rows);
-          if (statusText) statusText.innerText = `최신 연동됨 (${loadedCount}건)`;
-          if (dot) { dot.style.background = '#10b981'; }
+          if (statusText) statusText.innerText = '최신 연동됨 (' + loadedCount + '건)';
+          if (dot) dot.style.background = '#10b981';
           return;
         } else {
-          throw new Error('data.csv 파일에 데이터 행이 비어있습니다.');
+          throw new Error('data.csv 파일이 비어 있습니다.');
         }
       } else {
-        throw new Error(`data.csv 파일을 찾을 수 없습니다. (HTTP ${response.status})`);
+        throw new Error('data.csv HTTP ' + response.status);
       }
     } catch (err) {
-      console.warn('data.csv 자동 로드 실패:', err.message);
-      // 로컬 파일 직접 열기(file://)이거나 data.csv가 없을 때
-      vendors = JSON.parse(JSON.stringify(defaultVendors));
-      products = JSON.parse(JSON.stringify(defaultProducts));
+      console.warn('data.csv 로드 우회 (안내 모드):', err.message);
       rebuildVendorIndexes();
       refreshUI();
 
       if (location.protocol === 'file:') {
-        if (statusText) statusText.innerText = '로컬 실행 (웹서버/GitHub 필요)';
-        if (dot) { dot.style.background = '#f59e0b'; }
+        if (statusText) statusText.innerText = '로컬 모드 (웹서버/GitHub 필요)';
+        if (dot) dot.style.background = '#f59e0b';
       } else {
-        if (statusText) statusText.innerText = '기본 데이터 (data.csv 확인 필요)';
-        if (dot) { dot.style.background = '#ef4444'; }
+        if (statusText) statusText.innerText = 'data.csv 확인 필요';
+        if (dot) dot.style.background = '#ef4444';
       }
     }
   }
@@ -1101,39 +981,42 @@
     let currentRow = [];
     let currentCell = '';
     let inQuotes = false;
-    const cleanStr = text.replace(/^﻿/, '').replace(/
-/g, '
-').replace(/
-/g, '
-');
+    const str = text.charCodeAt(0) === 0xFEFF ? text.slice(1) : text;
+    const len = str.length;
 
-    for (let i = 0; i < cleanStr.length; i++) {
-      const ch = cleanStr[i];
-      const nextCh = cleanStr[i + 1];
+    for (let i = 0; i < len; i++) {
+      const code = str.charCodeAt(i);
+      const nextCode = i + 1 < len ? str.charCodeAt(i + 1) : 0;
 
-      if (ch === '"') {
-        if (inQuotes && nextCh === '"') {
+      if (code === 34) {
+        if (inQuotes && nextCode === 34) {
           currentCell += '"';
           i++;
         } else {
           inQuotes = !inQuotes;
         }
-      } else if (ch === ',' && !inQuotes) {
+      } else if (code === 44 && !inQuotes) {
         currentRow.push(currentCell.trim());
         currentCell = '';
-      } else if (ch === '
-' && !inQuotes) {
+      } else if ((code === 10 || code === 13) && !inQuotes) {
+        if (code === 13 && nextCode === 10) {
+          i++;
+        }
         currentRow.push(currentCell.trim());
-        if (currentRow.some(c => c !== '')) rows.push(currentRow);
+        if (currentRow.some(c => c !== '')) {
+          rows.push(currentRow);
+        }
         currentRow = [];
         currentCell = '';
       } else {
-        currentCell += ch;
+        currentCell += str[i];
       }
     }
     if (currentCell || currentRow.length > 0) {
       currentRow.push(currentCell.trim());
-      if (currentRow.some(c => c !== '')) rows.push(currentRow);
+      if (currentRow.some(c => c !== '')) {
+        rows.push(currentRow);
+      }
     }
     return rows;
   }
@@ -1144,15 +1027,10 @@
     let colPCode = -1, colPName = -1, colBCode = -1, colVCode = -1, colVName = -1;
 
     firstRow.forEach((col, idx) => {
-      // 품목코드 (SAP 자재번호 matnr 등 포함)
       if (/^(제품코드|품목코드|상품코드|코드|자재|자재코드|품번|code|itemcode|matnr)$/.test(col)) { colPCode = idx; isHeader = true; }
-      // 품목명 (SAP 자재내역 maktx 등 포함)
       else if (/^(품목명|제품명|상품명|품명|자재명|자재내역|규격|name|itemname|maktx)$/.test(col)) { colPName = idx; isHeader = true; }
-      // 바이어코드 (SAP 구매그룹 ekgrp, 구매담당 등 포함)
       else if (/^(바이어코드|바이어|바이어명|구매그룹|담당바이어|담당자|담당|md|buyer|buyercode|ekgrp)$/.test(col)) { colBCode = idx; isHeader = true; }
-      // 협력사코드 (SAP 공급업체 lifnr 등 포함)
       else if (/^(협력사코드|업체코드|거래처코드|공급사코드|공급업체코드|vendorcode|vendor|lifnr)$/.test(col)) { colVCode = idx; isHeader = true; }
-      // 협력사명 (SAP 공급업체명 name1 등 포함)
       else if (/^(협력사명|업체명|거래처명|회사명|공급업체명|공급사명|상호|vendorname|name1)$/.test(col)) { colVName = idx; isHeader = true; }
     });
 
@@ -1191,7 +1069,8 @@
       if (ex) {
         if (pName) ex.name = pName;
         if (bCode) ex.buyer_code = bCode;
-        if (vCode && !ex.vendor_codes.includes(vCode)) {
+        if (vCode && (!ex.vendor_codes || !ex.vendor_codes.includes(vCode))) {
+          if (!ex.vendor_codes) ex.vendor_codes = [];
           ex.vendor_codes.push(vCode);
         }
       } else {
@@ -1218,13 +1097,13 @@
   }
 
   function filterAndRender() {
-    const rawBuyer = (document.getElementById('buyerInput').value || '').trim();
+    const rawBuyer = (document.getElementById('buyerInput')?.value || '').trim();
     const isAllMode = rawBuyer === '*';
     const isBuyerEmpty = rawBuyer === '';
     const buyerVal = rawBuyer.toLowerCase();
 
-    const compVal = (document.getElementById('companyInput').value || '').trim().toLowerCase();
-    const prodVal = (document.getElementById('productInput').value || '').trim().toLowerCase();
+    const compVal = (document.getElementById('companyInput')?.value || '').trim().toLowerCase();
+    const prodVal = (document.getElementById('productInput')?.value || '').trim().toLowerCase();
 
     const promptCard = document.getElementById('initialBuyerPrompt');
     const prodTable = document.getElementById('productTable');
@@ -1233,23 +1112,27 @@
     const compList = document.getElementById('companyList');
 
     if (isBuyerEmpty) {
-      promptCard.style.display = 'flex';
-      prodTable.style.display = 'none';
-      emptyState.style.display = 'none';
-      compList.innerHTML = '';
-      compGuide.style.display = 'block';
+      if (promptCard) promptCard.style.display = 'flex';
+      if (prodTable) prodTable.style.display = 'none';
+      if (emptyState) emptyState.style.display = 'none';
+      if (compList) compList.innerHTML = '';
+      if (compGuide) compGuide.style.display = 'block';
 
-      document.getElementById('companyCountBadge').innerText = '0개사';
-      document.getElementById('productCountBadge').innerText = '0건';
-      document.getElementById('resultHeaderTitle').innerText = '담당 품목 목록';
-      document.getElementById('pageInfoSpan').innerText = '바이어 코드를 입력해주세요';
+      const cBadge = document.getElementById('companyCountBadge');
+      if (cBadge) cBadge.innerText = '0개사';
+      const pBadge = document.getElementById('productCountBadge');
+      if (pBadge) pBadge.innerText = '0건';
+      const rTitle = document.getElementById('resultHeaderTitle');
+      if (rTitle) rTitle.innerText = '담당 품목 목록';
+      const pInfo = document.getElementById('pageInfoSpan');
+      if (pInfo) pInfo.innerText = '바이어 코드를 입력해주세요';
       currentFilteredProducts = [];
       currentFilteredCompanies = [];
       return;
     }
 
-    promptCard.style.display = 'none';
-    compGuide.style.display = 'none';
+    if (promptCard) promptCard.style.display = 'none';
+    if (compGuide) compGuide.style.display = 'none';
 
     let buyerVendorSet = new Set();
     let buyerVendorCounts = new Map();
@@ -1320,24 +1203,29 @@
     });
 
     const titleEl = document.getElementById('resultHeaderTitle');
-    let titleStr = '';
-    if (isAllMode) {
-      titleStr = targetVendorName ? `전체 품목 · ${targetVendorName}` : '전체 품목 목록';
-    } else {
-      titleStr = targetVendorName 
-        ? `${rawBuyer} · ${targetVendorName}`
-        : `${rawBuyer} 담당 품목`;
+    if (titleEl) {
+      let titleStr = '';
+      if (isAllMode) {
+        titleStr = targetVendorName ? `전체 품목 · ${targetVendorName}` : '전체 품목 목록';
+      } else {
+        titleStr = targetVendorName 
+          ? `${rawBuyer} · ${targetVendorName}`
+          : `${rawBuyer} 담당 품목`;
+      }
+      titleEl.innerText = titleStr;
     }
-    titleEl.innerText = titleStr;
 
-    document.getElementById('companyCountBadge').innerText = `${currentFilteredCompanies.length.toLocaleString()}개사`;
-    document.getElementById('productCountBadge').innerText = `${currentFilteredProducts.length.toLocaleString()}건`;
+    const cBadge = document.getElementById('companyCountBadge');
+    if (cBadge) cBadge.innerText = `${currentFilteredCompanies.length.toLocaleString()}개사`;
+    const pBadge = document.getElementById('productCountBadge');
+    if (pBadge) pBadge.innerText = `${currentFilteredProducts.length.toLocaleString()}건`;
 
     renderFullProductTable();
   }
 
   function renderCompanyList(buyerVendorCounts) {
     const ul = document.getElementById('companyList');
+    if (!ul) return;
     ul.innerHTML = '';
 
     const allLi = document.createElement('li');
@@ -1391,20 +1279,21 @@
     const table = document.getElementById('productTable');
     const pageInfoSpan = document.getElementById('pageInfoSpan');
 
+    if (!tbody) return;
     tbody.innerHTML = '';
     const total = currentFilteredProducts.length;
 
     if (total === 0) {
-      emptyState.style.display = 'block';
-      table.style.display = 'none';
-      pageInfoSpan.innerText = '일치하는 품목이 없습니다';
+      if (emptyState) emptyState.style.display = 'block';
+      if (table) table.style.display = 'none';
+      if (pageInfoSpan) pageInfoSpan.innerText = '일치하는 품목이 없습니다';
       return;
     }
 
-    emptyState.style.display = 'none';
-    table.style.display = '';
+    if (emptyState) emptyState.style.display = 'none';
+    if (table) table.style.display = '';
 
-    const prodVal = (document.getElementById('productInput').value || '').trim();
+    const prodVal = (document.getElementById('productInput')?.value || '').trim();
     const fragment = document.createDocumentFragment();
 
     currentFilteredProducts.forEach((p, idx) => {
@@ -1443,7 +1332,7 @@
     });
 
     tbody.appendChild(fragment);
-    pageInfoSpan.innerText = `총 ${total.toLocaleString()}개 품목 표시 중`;
+    if (pageInfoSpan) pageInfoSpan.innerText = `총 ${total.toLocaleString()}개 품목 표시 중`;
   }
 </script>
 </body>
