@@ -3,222 +3,656 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>제품검색기 by Lupin  (Ver. 1. 1)</title>
+  <title>제품검색기 by Lupin (Ver. 1.1.1)</title>
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <style>
     :root {
-      --primary: #2563eb;
-      --primary-dark: #1d4ed8;
-      --primary-light: #eff6ff;
-      --buyer-accent: #0284c7;
-      --buyer-bg: #f0f9ff;
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+      --primary-glow: rgba(99, 102, 241, 0.25);
+      --primary-subtle: #f5f3ff;
+      --primary-border: #ddd6fe;
+
+      --cyan-gradient: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+      --emerald-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+
       --slate-50: #f8fafc;
       --slate-100: #f1f5f9;
       --slate-200: #e2e8f0;
       --slate-300: #cbd5e1;
+      --slate-400: #94a3b8;
       --slate-500: #64748b;
+      --slate-600: #475569;
       --slate-700: #334155;
       --slate-800: #1e293b;
-      --danger: #ef4444;
-      --radius: 12px;
-      --shadow: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+      --slate-900: #0f172a;
+
+      --surface: rgba(255, 255, 255, 0.85);
+      --surface-solid: #ffffff;
+      --surface-card: rgba(255, 255, 255, 0.92);
+
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-xl: 26px;
+      --radius-full: 9999px;
+
+      --shadow-subtle: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+      --shadow-card: 0 10px 30px -4px rgba(15, 23, 42, 0.06), 0 4px 12px -2px rgba(15, 23, 42, 0.03);
+      --shadow-float: 0 20px 40px -8px rgba(99, 102, 241, 0.15), 0 8px 16px -4px rgba(15, 23, 42, 0.05);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background-color: #f1f5f9; color: var(--slate-800); min-height: 100vh; padding: 16px 14px 40px; }
-    .container { max-width: 1400px; margin: 0 auto; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-    /* Header */
-    header { background: white; padding: 18px 22px; border-radius: var(--radius); box-shadow: var(--shadow); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; border-left: 6px solid var(--primary); }
-    .title-area h1 { font-size: 21px; font-weight: 800; color: var(--slate-800); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .title-area p { font-size: 12.5px; color: var(--slate-500); margin-top: 4px; }
-    .badge-pill { display: inline-block; padding: 3px 10px; background: var(--primary-light); color: var(--primary); border-radius: 999px; font-size: 12px; font-weight: 700; white-space: nowrap; }
-    .header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .stat-card { background: var(--slate-50); border: 1px solid var(--slate-200); padding: 7px 12px; border-radius: 8px; text-align: center; min-width: 82px; flex: 1; }
-    .stat-card .label { font-size: 11px; color: var(--slate-500); white-space: nowrap; }
-    .stat-card .value { font-size: 16px; font-weight: 700; color: var(--primary); margin-top: 2px; }
+    body {
+      background: radial-gradient(circle at 15% 10%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+                  radial-gradient(circle at 85% 25%, rgba(6, 182, 212, 0.07) 0%, transparent 45%),
+                  radial-gradient(circle at 50% 90%, rgba(217, 70, 239, 0.04) 0%, transparent 50%),
+                  #f8fafc;
+      color: var(--slate-800);
+      min-height: 100vh;
+      padding: 30px 22px 70px;
+      -webkit-font-smoothing: antialiased;
+      background-attachment: fixed;
+    }
 
-    /* Top Buyer Panel */
-    .search-panel { background: white; padding: 18px 20px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 16px; }
-    .buyer-highlight-box {
-      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-      border: 2px solid #0284c7;
-      border-radius: 12px;
-      padding: 16px 18px;
+    .container {
+      max-width: 1320px;
+      margin: 0 auto;
+    }
+
+    /* ✨ Elegant Glassmorphism Header */
+    header {
+      background: var(--surface);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      padding: 20px 28px;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-subtle);
       display: flex;
       flex-wrap: wrap;
-      align-items: center;
       justify-content: space-between;
-      gap: 14px;
-      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.08);
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 22px;
+      position: relative;
+      overflow: hidden;
     }
-    .buyer-info { display: flex; align-items: center; gap: 12px; }
-    .buyer-icon { font-size: 28px; background: white; width: 46px; height: 46px; min-width: 46px; display: flex; align-items: center; justify-content: center; border-radius: 50%; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
-    .buyer-title { font-size: 16px; font-weight: 800; color: #0369a1; }
-    .buyer-desc { font-size: 12.5px; color: #0284c7; margin-top: 2px; font-weight: 500; line-height: 1.4; }
 
-    .buyer-input-group { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 260px; max-width: 480px; }
-    .buyer-input-wrapper { position: relative; width: 100%; }
-    .buyer-input-wrapper input {
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--primary-gradient);
+    }
+
+    .title-area h1 {
+      font-size: 23px;
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      color: var(--slate-900);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-container {
+      width: 40px;
+      height: 40px;
+      background: var(--primary-gradient);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 19px;
+      box-shadow: 0 8px 18px -2px rgba(99, 102, 241, 0.4);
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .version-tag {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary);
+      background: var(--primary-subtle);
+      border: 1px solid var(--primary-border);
+      padding: 3px 9px;
+      border-radius: var(--radius-full);
+      letter-spacing: normal;
+      -webkit-text-fill-color: initial;
+    }
+
+    .title-area p {
+      font-size: 13px;
+      color: var(--slate-500);
+      margin-top: 6px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .title-area p .info-icon {
+      color: var(--primary);
+      font-size: 14px;
+    }
+
+    .header-chips {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sync-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 14px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--slate-600);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      display: inline-block;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: pulseAnimation 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+    }
+
+    @keyframes pulseAnimation {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 7px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    /* 💎 Floating Glass Hero Search Box */
+    .hero-search-wrapper {
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .hero-search-card {
+      background: var(--surface);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1.5px solid rgba(255, 255, 255, 0.95);
+      border-radius: var(--radius-xl);
+      padding: 8px 12px 8px 24px;
+      box-shadow: var(--shadow-float);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    .hero-search-card:focus-within {
+      border-color: rgba(99, 102, 241, 0.7);
+      box-shadow: 0 24px 48px -10px rgba(99, 102, 241, 0.25), 0 0 0 4px rgba(99, 102, 241, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .hero-search-icon {
+      font-size: 24px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+
+    .hero-search-card:focus-within .hero-search-icon {
+      transform: scale(1.1);
+    }
+
+    .hero-input-area {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-input-area input {
       width: 100%;
-      height: 46px;
-      padding: 0 38px 0 42px;
-      border: 2px solid #0284c7;
-      border-radius: 10px;
-      font-size: 16px;
+      height: 52px;
+      border: none;
+      background: transparent;
+      font-size: 18px;
       font-weight: 700;
-      color: #0c4a6e;
-      background: white;
+      color: var(--slate-900);
       outline: none;
-      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+      letter-spacing: -0.02em;
     }
-    .buyer-input-wrapper input::placeholder { font-weight: 500; color: #94a3b8; font-size: 13.5px; }
-    .buyer-input-wrapper .icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 18px; pointer-events: none; }
 
-    .management-bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--slate-200); flex-wrap: wrap; }
-    .quick-tags { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-    .tag { background: var(--slate-100); color: var(--slate-700); padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--slate-200); }
-    .tag:hover, .tag:active { background: var(--primary-light); color: var(--primary); border-color: #bfdbfe; }
-
-    .action-btn-group { display: flex; flex-wrap: wrap; gap: 6px; }
-
-    button.btn { height: 38px; padding: 0 12px; border-radius: 8px; font-size: 12.5px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 5px; border: none; white-space: nowrap; }
-    button.btn-primary { background: var(--primary); color: white; }
-    button.btn-primary:hover { background: var(--primary-dark); }
-    button.btn-success { background: #059669; color: white; }
-    button.btn-outline { background: white; border: 1.5px solid var(--slate-200); color: var(--slate-700); }
-    button.btn-danger-outline { background: white; border: 1.5px solid #fecaca; color: var(--danger); }
-    button.btn-danger { background: var(--danger); color: white; }
-    button.btn-danger:disabled { background: #fca5a5; cursor: not-allowed; }
-
-    /* Search Box inside each Section */
-    .section-search-box {
-      background: white;
-      padding: 14px 16px;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      border: 1.5px solid var(--slate-200);
+    .hero-input-area input::placeholder {
+      color: var(--slate-400);
+      font-weight: 500;
+      font-size: 16px;
     }
-    .form-group { display: flex; flex-direction: column; gap: 6px; }
-    .form-group label { font-size: 13px; font-weight: 700; color: var(--slate-800); display: flex; align-items: center; justify-content: space-between; }
-    .input-wrapper { position: relative; }
-    .input-wrapper input { width: 100%; height: 42px; padding: 0 36px 0 38px; border: 1.5px solid var(--slate-300); border-radius: 8px; font-size: 15px; outline: none; background: var(--slate-50); transition: all 0.15s; }
-    .input-wrapper input:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
-    .input-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--slate-500); pointer-events: none; font-size: 15px; }
-    .clear-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--slate-400); cursor: pointer; font-size: 18px; display: none; padding: 4px; }
 
-    /* Workspace Layout:
-       DOM Order:
-       1. .product-section (품목명 키워드 검색창 -> 담당 품목 목록)
-       2. .company-section (회사코드/협력사명 검색창 -> 협력사 디렉토리)
-       On PC (>= 961px): 2-column grid (Company on Left 340px, Product on Right 1fr)
-       On Mobile (<= 960px): Natural DOM order stack!
-    */
+    .clear-hero-btn {
+      background: var(--slate-100);
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      color: var(--slate-400);
+      cursor: pointer;
+      font-size: 15px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+      margin-right: 6px;
+    }
+
+    .clear-hero-btn:hover {
+      background: var(--slate-200);
+      color: var(--slate-700);
+      transform: scale(1.05);
+    }
+
+    /* 2-Column Responsive Workspace Grid */
     .workspace-grid {
       display: grid;
-      grid-template-columns: 340px 1fr;
+      grid-template-columns: 330px 1fr;
       grid-template-areas: "company product";
-      gap: 18px;
+      gap: 22px;
       align-items: start;
     }
+
     .product-section {
       grid-area: product;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 16px;
       min-width: 0;
     }
+
     .company-section {
       grid-area: company;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 16px;
       min-width: 0;
     }
 
-    .company-card, .table-card {
-      background: white;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      display: flex;
-      flex-direction: column;
-      height: calc(100vh - 340px);
-      min-height: 480px;
-      overflow: hidden;
-    }
-    .card-header { padding: 13px 16px; border-bottom: 1px solid var(--slate-200); font-size: 14px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; background: #fafbfc; gap: 8px; flex-wrap: wrap; }
-    .table-container, .company-list { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-    
-    .company-list { list-style: none; }
-    .company-item { padding: 12px 16px; border-bottom: 1px solid var(--slate-100); cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-    .company-item:hover { background: var(--primary-light); }
-    .company-item.active { background: #e0e7ff; border-left: 4px solid var(--primary); font-weight: bold; }
-    .company-name { font-size: 13.5px; font-weight: 600; color: var(--slate-800); line-height: 1.35; }
-    .company-code { font-size: 12px; color: var(--slate-500); font-family: ui-monospace, monospace; margin-top: 2px; }
-    .item-del-btn { opacity: 0.25; background: none; border: none; color: var(--slate-400); font-size: 15px; cursor: pointer; padding: 4px 6px; }
-    .company-item:hover .item-del-btn, tbody tr:hover .item-del-btn { opacity: 1; }
-    .item-del-btn:hover { color: var(--danger); }
-
-    table { width: 100%; border-collapse: collapse; text-align: left; }
-    thead th { position: sticky; top: 0; background: #f8fafc; z-index: 2; padding: 11px 12px; font-size: 12.5px; font-weight: 700; color: var(--slate-700); border-bottom: 1.5px solid var(--slate-200); white-space: nowrap; }
-    tbody tr { border-bottom: 1px solid var(--slate-100); }
-    tbody tr:hover { background: #f8faff; }
-    tbody td { padding: 11px 12px; font-size: 13px; color: var(--slate-700); vertical-align: middle; }
-    
-    input.row-checkbox, input.vendor-checkbox, input#selectAllCheckbox, input#selectAllVendorsCheckbox { width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary); }
-    tr.selected-row, li.selected-row { background-color: #eff6ff !important; }
-
-    .p-code { font-family: ui-monospace, monospace; font-weight: 700; color: var(--primary); background: var(--primary-light); padding: 3px 8px; border-radius: 5px; display: inline-block; font-size: 12px; }
-    .b-code { font-family: ui-monospace, monospace; font-weight: 700; color: #0284c7; background: #e0f2fe; border: 1px solid #bae6fd; padding: 2px 7px; border-radius: 5px; display: inline-block; font-size: 11.5px; margin: 1px; }
-    .v-code { font-family: ui-monospace, monospace; font-weight: 600; color: #0f766e; background: #f0fdfa; border: 1px solid #ccfbf1; padding: 2px 7px; border-radius: 5px; display: inline-block; font-size: 11.5px; margin: 1px; }
-    .vendor-badge { display: inline-block; font-size: 11.5px; padding: 2px 7px; background: var(--slate-100); color: var(--slate-700); border-radius: 5px; border: 1px solid var(--slate-200); margin: 1px; font-weight: 500; }
-
-    .table-footer {
+    /* Sleek Floating Filter Inputs */
+    .filter-card {
+      background: var(--surface);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: var(--radius-md);
       padding: 10px 16px;
-      background: #fafbfc;
-      border-top: 1px solid var(--slate-200);
+      box-shadow: var(--shadow-subtle);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      transition: all 0.2s ease;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      font-size: 12.5px;
+      gap: 10px;
+    }
+
+    .filter-card:focus-within {
+      border-color: var(--primary);
+      background: var(--surface-solid);
+      box-shadow: 0 8px 20px -4px rgba(99, 102, 241, 0.12), 0 0 0 3px rgba(99, 102, 241, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .filter-icon {
+      font-size: 16px;
+      color: var(--slate-400);
+      flex-shrink: 0;
+    }
+
+    .filter-card input {
+      width: 100%;
+      height: 38px;
+      border: none;
+      background: transparent;
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--slate-800);
+      outline: none;
+    }
+
+    .filter-card input::placeholder {
+      color: var(--slate-400);
+      font-weight: 400;
+      font-size: 13.5px;
+    }
+
+    .clear-filter-btn {
+      background: none;
+      border: none;
+      color: var(--slate-300);
+      font-size: 17px;
+      cursor: pointer;
+      display: none;
+      padding: 4px;
+      transition: color 0.15s;
+    }
+
+    .clear-filter-btn:hover {
       color: var(--slate-600);
     }
 
-    /* Modals */
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45); backdrop-filter: blur(2px); z-index: 999; align-items: center; justify-content: center; padding: 14px; }
-    .modal { background: white; width: 100%; max-width: 540px; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
-    .modal-header { padding: 15px 18px; background: #fafbfc; border-bottom: 1px solid var(--slate-200); display: flex; justify-content: space-between; align-items: center; font-weight: 700; }
-    .modal-body { padding: 18px; display: flex; flex-direction: column; gap: 14px; max-height: 78vh; overflow-y: auto; }
-    .modal-footer { padding: 12px 18px; background: #fafbfc; border-top: 1px solid var(--slate-200); display: flex; justify-content: flex-end; gap: 8px; }
-    
-    .upload-dropzone { border: 2px dashed #94a3b8; border-radius: 10px; padding: 30px 14px; text-align: center; cursor: pointer; background: var(--slate-50); transition: all 0.2s ease; }
-    .upload-dropzone:hover, .upload-dropzone.dragover { border-color: var(--primary); background: #dbeafe; }
-    
-    #globalDragIndicator {
-      display: none;
-      position: fixed;
-      inset: 12px;
-      border: 3px dashed var(--primary);
-      background: rgba(239, 246, 255, 0.92);
-      backdrop-filter: blur(3px);
-      z-index: 9999;
-      border-radius: 16px;
-      pointer-events: none;
+    /* Main Display Glass Panels */
+    .glass-panel {
+      background: var(--surface-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 290px);
+      min-height: 520px;
+      overflow: hidden;
+      transition: all 0.2s ease;
+    }
+
+    .panel-top-bar {
+      padding: 16px 20px;
+      background: rgba(248, 250, 252, 0.8);
+      border-bottom: 1px solid var(--slate-200);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .panel-heading {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--slate-900);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .glowing-pill {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 10px;
+      background: var(--primary-subtle);
+      color: var(--primary-dark);
+      border-radius: var(--radius-full);
+      border: 1px solid var(--primary-border);
+    }
+
+    .panel-scrollable {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Custom Elegant Scrollbar */
+    .panel-scrollable::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .panel-scrollable::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .panel-scrollable::-webkit-scrollbar-thumb {
+      background: var(--slate-300);
+      border-radius: var(--radius-full);
+    }
+    .panel-scrollable::-webkit-scrollbar-thumb:hover {
+      background: var(--slate-400);
+    }
+
+    /* Company List items */
+    .company-list {
+      list-style: none;
+    }
+
+    .company-item {
+      padding: 14px 20px;
+      border-bottom: 1px solid rgba(241, 245, 249, 0.9);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: all 0.15s ease;
+      position: relative;
+    }
+
+    .company-item:hover {
+      background: rgba(248, 250, 252, 0.9);
+      transform: translateX(3px);
+    }
+
+    .company-item.active {
+      background: #f5f3ff;
+      border-left: 4px solid var(--primary);
+    }
+
+    .company-item-name {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--slate-800);
+      line-height: 1.4;
+    }
+
+    .company-item.active .company-item-name {
+      color: var(--primary-dark);
+      font-weight: 800;
+    }
+
+    .company-item-code {
+      font-size: 12px;
+      color: var(--slate-400);
+      font-family: ui-monospace, monospace;
+      margin-top: 2px;
+    }
+
+    .company-badge-count {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      background: var(--primary-subtle);
+      border: 1px solid var(--primary-border);
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      flex-shrink: 0;
+    }
+
+    /* SaaS Desktop Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    thead th {
+      position: sticky;
+      top: 0;
+      background: #f8fafc;
+      z-index: 2;
+      padding: 13px 16px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--slate-500);
+      border-bottom: 1px solid var(--slate-200);
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid rgba(241, 245, 249, 0.85);
+      transition: background 0.12s ease;
+    }
+
+    tbody tr:hover {
+      background: #fafbff;
+    }
+
+    tbody td {
+      padding: 13px 16px;
+      font-size: 13.5px;
+      color: var(--slate-700);
+      vertical-align: middle;
+    }
+
+    /* 🏷️ Vibrant Modern Pill Badges */
+    .badge-code {
+      font-family: ui-monospace, monospace;
+      font-weight: 700;
+      color: #4f46e5;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      display: inline-block;
+    }
+
+    .badge-buyer {
+      font-family: ui-monospace, monospace;
+      font-weight: 700;
+      color: #0284c7;
+      background: #e0f2fe;
+      border: 1px solid #bae6fd;
+      padding: 2.5px 8px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      display: inline-block;
+    }
+
+    .badge-vcode {
+      font-family: ui-monospace, monospace;
+      font-weight: 600;
+      color: #0f766e;
+      background: #f0fdfa;
+      border: 1px solid #ccfbf1;
+      padding: 2.5px 7px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      display: inline-block;
+      margin: 1px;
+    }
+
+    .badge-vendor {
+      display: inline-block;
+      font-size: 12px;
+      padding: 3px 9px;
+      background: var(--slate-100);
+      color: var(--slate-700);
+      border: 1px solid var(--slate-200);
+      border-radius: 6px;
+      margin: 1px;
+      font-weight: 500;
+    }
+
+    .panel-footer-bar {
+      padding: 12px 20px;
+      background: rgba(248, 250, 252, 0.8);
+      border-top: 1px solid var(--slate-200);
+      font-size: 12.5px;
+      color: var(--slate-500);
+      font-weight: 500;
+    }
+
+    /* 🎨 Gorgeous Empty & Waiting State Illustration */
+    .aesthetic-prompt {
+      padding: 80px 24px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      flex-direction: column;
+      height: 100%;
+    }
+
+    .halo-ring {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(6, 182, 212, 0.12) 100%);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      margin-bottom: 18px;
+      box-shadow: 0 10px 25px -4px rgba(99, 102, 241, 0.15);
+      animation: gentleFloat 4s ease-in-out infinite;
+    }
+
+    @keyframes gentleFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .aesthetic-prompt h3 {
       font-size: 18px;
+      color: var(--slate-900);
+      font-weight: 800;
+      margin-bottom: 8px;
+      letter-spacing: -0.025em;
+    }
+
+    .aesthetic-prompt p {
+      font-size: 13.5px;
+      color: var(--slate-500);
+      max-width: 360px;
+      line-height: 1.6;
+    }
+
+    .aesthetic-prompt .glow-hint {
+      margin-top: 14px;
+      display: inline-block;
+      padding: 5px 14px;
+      background: white;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-full);
+      font-size: 12px;
       font-weight: 700;
       color: var(--primary);
-      text-align: center;
-      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
     }
-    
+
+    /* Overlay */
     #loadingOverlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.6);
+      background: rgba(15, 23, 42, 0.4);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
       z-index: 10000;
       align-items: center;
       justify-content: center;
@@ -226,169 +660,162 @@
       flex-direction: column;
       gap: 12px;
       font-size: 15px;
-      font-weight: 600;
+      font-weight: 700;
     }
+
     .spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid rgba(255,255,255,0.3);
-      border-top-color: white;
+      width: 38px;
+      height: 38px;
+      border: 3.5px solid rgba(255, 255, 255, 0.25);
+      border-top-color: #ffffff;
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
+
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .pwd-input-wrap { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
-    .pwd-input-wrap input {
-      height: 46px;
-      border: 2px solid var(--slate-300);
-      border-radius: 8px;
-      font-size: 20px;
-      text-align: center;
-      letter-spacing: 6px;
-      font-weight: 800;
-      outline: none;
-    }
-    .pwd-input-wrap input:focus { border-color: var(--primary); }
-    .pwd-error-msg { font-size: 12.5px; color: var(--danger); font-weight: 600; display: none; }
-
-    .initial-prompt-card {
-      padding: 46px 18px;
-      text-align: center;
-      color: var(--slate-500);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-    }
-    .initial-prompt-card .big-icon { font-size: 46px; margin-bottom: 12px; opacity: 0.9; }
-    .initial-prompt-card h3 { font-size: 18px; color: var(--slate-800); margin-bottom: 8px; font-weight: 800; }
-    .initial-prompt-card p { font-size: 13px; line-height: 1.6; max-width: 440px; color: var(--slate-600); }
-    .initial-prompt-card .tip { margin-top: 12px; padding: 6px 14px; background: #e0f2fe; color: #0369a1; border-radius: 20px; font-size: 12px; font-weight: 700; }
-
     /* =========================================================
-       📱 스마트폰 & 태블릿 반응형 최적화 (Mobile First UX)
-       순서: 품목명 검색창 -> 담당품목목록 -> 회사코드/협력사명 검색창 -> 협력사 디렉토리
+       📱 Mobile Masterpiece Layout (Smartphones <= 960px)
+       Order:
+       1. Hero Buyer Input
+       2. Product Search Box
+       3. Product List Card (Card view)
+       4. Company Search Box
+       5. Company Directory Card
        ========================================================= */
     @media (max-width: 960px) {
-      body { padding: 10px 10px 36px; }
-      header { padding: 14px 16px; margin-bottom: 12px; }
-      .title-area h1 { font-size: 18px; }
-      .title-area p { font-size: 11.5px; }
-      .header-actions { width: 100%; justify-content: space-between; gap: 6px; }
-      .stat-card { padding: 6px 8px; min-width: 70px; }
-      .stat-card .value { font-size: 14.5px; }
+      body {
+        padding: 12px 12px 50px;
+      }
 
-      .search-panel { padding: 14px; margin-bottom: 14px; }
-      .buyer-highlight-box { padding: 14px; gap: 10px; }
-      .buyer-icon { width: 40px; height: 40px; min-width: 40px; font-size: 22px; }
-      .buyer-title { font-size: 15px; }
-      .buyer-desc { font-size: 11.5px; }
-      .buyer-input-group { max-width: 100%; width: 100%; }
+      header {
+        padding: 16px 18px;
+        border-radius: var(--radius-lg);
+        margin-bottom: 14px;
+      }
 
-      .management-bar { flex-direction: column; align-items: stretch; gap: 10px; }
-      .action-btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; width: 100%; }
-      .action-btn-group button.btn { width: 100%; font-size: 12px; height: 36px; padding: 0 8px; }
+      .title-area h1 {
+        font-size: 19px;
+      }
 
-      /* 단일 컬럼 스택: DOM 순서 그대로 (1.품목검색 -> 2.품목목록 -> 3.협력사검색 -> 4.협력사목록) */
+      .logo-container {
+        width: 34px;
+        height: 34px;
+        font-size: 16px;
+        border-radius: 10px;
+      }
+
+      .title-area p {
+        font-size: 12px;
+      }
+
+      .hero-search-card {
+        padding: 6px 10px 6px 18px;
+        border-radius: var(--radius-lg);
+      }
+
+      .hero-search-icon {
+        font-size: 20px;
+      }
+
+      .hero-input-area input {
+        height: 44px;
+        font-size: 16px;
+      }
+
+      .hero-input-area input::placeholder {
+        font-size: 14px;
+      }
+
+      /* Natural Stack by DOM Order */
       .workspace-grid {
         display: flex;
         flex-direction: column;
-        gap: 18px;
+        gap: 16px;
       }
+
       .product-section, .company-section {
         width: 100%;
         gap: 10px;
       }
 
-      /* 모바일에서는 내부 스크롤 박스 높이를 적당하게 조절하여 답답함 해소 */
-      .table-card {
+      .glass-panel {
         height: auto;
-        max-height: 62vh;
-        min-height: 300px;
-      }
-      .company-card {
-        height: auto;
-        max-height: 50vh;
-        min-height: 260px;
+        max-height: 60vh;
+        min-height: 280px;
+        border-radius: var(--radius-md);
       }
     }
 
-    /* 스마트폰 화면(768px 이하)에서 품목 테이블을 보기 편한 카드형 리스트로 자동 변환 */
+    /* Mobile Table -> Gorgeous Card UI */
     @media (max-width: 768px) {
       #productTable thead {
-        display: none; /* 모바일에서는 좁은 테이블 헤더를 숨기고 카드형으로 깔끔하게 표시 */
+        display: none;
       }
+
       #productTable, #productTable tbody {
         display: block;
         width: 100%;
       }
+
       #productTable tbody tr {
-        display: grid;
-        grid-template-columns: auto 1fr auto;
-        grid-template-areas:
-          "check meta del"
-          "name name name"
-          "vendor vendor vendor";
-        gap: 6px 8px;
-        padding: 12px 14px;
-        border-bottom: 1px solid var(--slate-200);
-        align-items: center;
+        display: block;
+        padding: 14px 16px;
+        border-bottom: 1px solid rgba(226, 232, 240, 0.7);
+        transition: background 0.15s;
       }
+
+      #productTable tbody tr:active {
+        background: var(--slate-100);
+      }
+
       #productTable tbody td {
         padding: 0;
         border: none;
       }
-      #productTable tbody td.cell-check {
-        grid-area: check;
-      }
+
       #productTable tbody td.cell-no {
-        display: none; /* 카드 뷰에서는 번호 생략하여 공간 확보 */
+        display: none;
       }
+
       #productTable tbody td.cell-code {
-        grid-area: meta;
         display: flex;
         align-items: center;
         gap: 6px;
-        flex-wrap: wrap;
+        margin-bottom: 6px;
       }
+
       #productTable tbody td.cell-name {
-        grid-area: name;
-        font-size: 14px;
+        font-size: 15px;
         font-weight: 700 !important;
-        color: var(--slate-800);
-        line-height: 1.4;
-        margin-top: 2px;
+        color: var(--slate-900);
+        line-height: 1.45;
+        margin-bottom: 8px;
         word-break: keep-all;
       }
+
       #productTable tbody td.cell-buyer {
-        display: none; /* 제품코드 옆에 통합 배지로 표시 */
+        display: none;
       }
+
       #productTable tbody td.cell-vcode {
-        display: none; /* 하단 협력사 영역에 통합 표시 */
+        display: none;
       }
+
       #productTable tbody td.cell-vname {
-        grid-area: vendor;
         display: flex;
         flex-wrap: wrap;
         gap: 4px;
         align-items: center;
-        margin-top: 2px;
       }
-      #productTable tbody td.cell-del {
-        grid-area: del;
-      }
-      .item-del-btn {
-        opacity: 0.6;
-        font-size: 16px;
-      }
-      .mobile-only-badge {
+
+      .mobile-buyer-badge {
         display: inline-block !important;
       }
     }
+
     @media (min-width: 769px) {
-      .mobile-only-badge {
+      .mobile-buyer-badge {
         display: none !important;
       }
     }
@@ -398,271 +825,136 @@
 
 <div id="loadingOverlay">
   <div class="spinner"></div>
-  <div id="loadingText">대용량 데이터를 고속 처리 중입니다...</div>
-</div>
-
-<div id="globalDragIndicator">
-  <div style="font-size: 48px; margin-bottom: 10px;">📂</div>
-  <div>CSV 또는 엑셀 파일을 여기에 놓으시면 즉시 업로드됩니다!</div>
+  <div id="loadingText">데이터를 불러오는 중입니다...</div>
 </div>
 
 <div class="container">
+  <!-- ✨ Header -->
   <header>
     <div class="title-area">
-      <h1><span>🔍</span> 제품검색기 by Lupin  (Ver. 1. 1) <span class="badge-pill">모바일·PC 최적화</span></h1>
-      <p>월 1회 업데이트 되므로, 최대 1개월 내 변동사항은 반영되지 않습니다.</p>
+      <h1>
+        <div class="logo-container">🔍</div>
+        <span class="brand-title">제품검색기 by Lupin</span>
+        <span class="version-tag">Ver. 1. 1</span>
+      </h1>
+      <p>
+        <span class="info-icon">ℹ️</span>
+        <span>월 1회 업데이트 되므로, 최대 1개월 내 변동사항은 반영되지 않습니다.</span>
+      </p>
     </div>
-    <div class="header-actions">
-      <div class="stat-card" style="min-width:115px;">
-        <div class="label">동기화 상태</div>
-        <div class="value" id="syncStatusBadge" style="font-size:11.5px;font-weight:700;color:#0284c7;margin-top:3px;">확인 중...</div>
+    <div class="header-chips">
+      <div class="sync-badge">
+        <span class="pulse-dot"></span>
+        <span id="syncStatusText">동기화 완료</span>
       </div>
-      <div class="stat-card"><div class="label">협력사 수</div><div class="value" id="statVendorCount">-</div></div>
-      <div class="stat-card"><div class="label">품목 수</div><div class="value" id="statProductCount">-</div></div>
     </div>
   </header>
 
-  <!-- 최상단: 바이어 코드 입력 영역 및 관리 도구 -->
-  <div class="search-panel">
-    <div class="buyer-highlight-box">
-      <div class="buyer-info">
-        <div class="buyer-icon">🎯</div>
-        <div>
-          <div class="buyer-title">바이어 코드를 입력하세요</div>
-          <div class="buyer-desc">담당 바이어 코드를 입력하면 해당 품목 및 협력사만 즉시 조회됩니다. (전체 조회: <b>*</b> 입력)</div>
-        </div>
+  <!-- 💎 Floating Hero Input -->
+  <div class="hero-search-wrapper">
+    <div class="hero-search-card">
+      <div class="hero-search-icon">🎯</div>
+      <div class="hero-input-area">
+        <input type="text" id="buyerInput" placeholder="바이어 코드를 입력하세요 (전체 조회: * 입력)" autocomplete="off">
       </div>
-      <div class="buyer-input-group">
-        <div class="buyer-input-wrapper">
-          <span class="icon">🏷️</span>
-          <input type="text" id="buyerInput" placeholder="바이어 코드를 입력하세요" autocomplete="off">
-          <button class="clear-btn" id="clearBuyerBtn" onclick="clearBuyer()">&times;</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="management-bar">
-      <div class="quick-tags">
-        <span style="font-size:12px;color:var(--slate-500);font-weight:700;">빠른 선택:</span>
-        <span class="tag" onclick="quickSelectBuyer('*')">전체보기 (*)</span>
-        <span class="tag" onclick="quickSelectBuyer('B101')">B101</span>
-        <span class="tag" onclick="quickSelectBuyer('B102')">B102</span>
-        <span class="tag" onclick="quickSelectBuyer('B103')">B103</span>
-        <span class="tag" onclick="quickSelectBuyer('B104')">B104</span>
-        <span class="tag" style="background:#fff1f2;color:#e11d48;border-color:#fecdd3;" onclick="resetAllFilters()">↺ 전체 초기화</span>
-      </div>
-      <div class="action-btn-group">
-        <button class="btn btn-success" onclick="requirePasswordAndExecute(openAddProductModal)">➕ 품목 추가 🔒</button>
-        <button class="btn btn-outline" onclick="requirePasswordAndExecute(openAddVendorModal)">🏢 업체 추가 🔒</button>
-        <button class="btn btn-primary" onclick="requirePasswordAndExecute(openUploadModal)">📂 일괄 업로드 🔒</button>
-        <button class="btn btn-outline" onclick="exportToCSV()">📥 CSV 다운</button>
-      </div>
+      <button class="clear-hero-btn" id="clearBuyerBtn" onclick="clearBuyer()">&times;</button>
     </div>
   </div>
 
-  <!-- 메인 작업 영역
-       모바일 배치 순서(DOM 순서):
-       1. 품목명 키워드 검색창
-       2. 담당 품목 목록
-       3. 회사코드 또는 협력사명 검색창
-       4. 협력사 디렉토리
+  <!-- 🚀 Main Workspace Grid
+       DOM Order:
+       1. Product Search Box
+       2. Product List Panel
+       3. Company Search Box
+       4. Company List Panel
   -->
   <div class="workspace-grid">
 
-    <!-- [순서 1 & 2] 품목명 키워드 검색창 + 담당 품목 목록 -->
+    <!-- [1 & 2] Product Section -->
     <div class="product-section">
       <!-- 1. 품목명 키워드 검색창 -->
-      <div class="section-search-box">
-        <div class="form-group">
-          <label>
-            <span>🔍 품목명 키워드 또는 제품코드 검색</span>
-            <span style="font-size:11.5px;color:var(--slate-500);font-weight:500;">실시간 필터링</span>
-          </label>
-          <div class="input-wrapper">
-            <span class="input-icon">🔍</span>
-            <input type="text" id="productInput" placeholder="예: 크루아상, 피자, 또띠아, 베이글, 제품코드 등" autocomplete="off">
-            <button class="clear-btn" id="clearProductBtn" onclick="clearProduct()">&times;</button>
-          </div>
-        </div>
+      <div class="filter-card">
+        <span class="filter-icon">🔍</span>
+        <input type="text" id="productInput" placeholder="품목명 또는 제품코드 검색" autocomplete="off">
+        <button class="clear-filter-btn" id="clearProductBtn" onclick="clearProduct()">&times;</button>
       </div>
 
       <!-- 2. 담당 품목 목록 -->
-      <div class="table-card">
-        <div class="card-header">
-          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+      <div class="glass-panel">
+        <div class="panel-top-bar">
+          <div class="panel-heading">
+            <span>📋</span>
             <span id="resultHeaderTitle">담당 품목 목록</span>
-            <span class="badge-pill" id="productCountBadge">0건</span>
           </div>
-          <div style="display:flex;gap:6px;align-items:center;">
-            <button class="btn btn-danger" id="batchDeleteBtn" onclick="requirePasswordAndExecute(deleteSelectedProducts)" style="height:28px;padding:0 10px;font-size:11.5px;" disabled>
-              🗑️ 선택삭제 (<span id="selectedCountSpan">0</span>)
-            </button>
-            <button class="btn btn-outline" onclick="requirePasswordAndExecute(deleteCurrentFilteredProducts)" style="height:28px;padding:0 8px;font-size:11.5px;">
-              전체삭제
-            </button>
-          </div>
+          <span class="glowing-pill" id="productCountBadge">0건</span>
         </div>
-        <div class="table-container">
-          <!-- 초기 안내 화면 -->
-          <div id="initialBuyerPrompt" class="initial-prompt-card">
-            <div class="big-icon">🎯</div>
+
+        <div class="panel-scrollable">
+          <!-- 최초 클린 안내 화면 -->
+          <div id="initialBuyerPrompt" class="aesthetic-prompt">
+            <div class="halo-ring">🎯</div>
             <h3>바이어 코드를 입력하세요</h3>
-            <p>
-              상단 입력란에 담당 <b>바이어 코드</b>를 입력하시면<br>
-              해당 바이어의 품목 목록과 협력사가 즉시 나타납니다.
-            </p>
-            <div class="tip">전체 품목을 조회하시려면 별표( <b>*</b> )를 입력하세요.</div>
+            <p>상단 입력창에 담당 바이어 코드를 입력하시면<br>해당 품목과 협력사 목록이 바로 표시됩니다.</p>
+            <div class="glow-hint">💡 전체 품목 조회는 * 입력</div>
           </div>
 
           <table id="productTable" style="display:none;">
             <thead>
               <tr>
-                <th style="width:36px;text-align:center;"><input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this)"></th>
-                <th style="width:46px;text-align:center;">No.</th>
-                <th style="width:95px;">제품코드</th>
+                <th style="width:48px;">No.</th>
+                <th style="width:100px;">제품코드</th>
                 <th>품목명 (규격/포장단위)</th>
-                <th style="width:95px;color:#0284c7;">바이어코드</th>
-                <th style="width:105px;">협력사 코드</th>
-                <th style="width:155px;">협력사명</th>
-                <th style="width:46px;text-align:center;">관리</th>
+                <th style="width:95px;">바이어</th>
+                <th style="width:115px;">협력사 코드</th>
+                <th style="width:160px;">협력사명</th>
               </tr>
             </thead>
             <tbody id="productTableBody"></tbody>
           </table>
-          <div id="emptyState" style="display:none;padding:46px 16px;text-align:center;color:var(--slate-500);">
-            <h3>해당 조건과 일치하는 품목이 없습니다.</h3>
+
+          <div id="emptyState" style="display:none;padding:60px 20px;text-align:center;color:var(--slate-400);">
+            <p style="font-size:14px;font-weight:600;">조건과 일치하는 품목이 없습니다.</p>
           </div>
         </div>
-        <div class="table-footer" id="tableFooter">
-          <span id="pageInfoSpan">바이어 코드를 입력해주세요</span>
-          <span style="font-size:11.5px;color:var(--slate-400);cursor:pointer;" onclick="requirePasswordAndExecute(confirmResetInitialData)">⚙️ 원본복구</span>
+
+        <div class="panel-footer-bar" id="pageInfoSpan">
+          바이어 코드를 입력해주세요
         </div>
       </div>
     </div>
 
-    <!-- [순서 3 & 4] 회사코드/협력사명 검색창 + 협력사 디렉토리 -->
+    <!-- [3 & 4] Company Section -->
     <div class="company-section">
       <!-- 3. 회사코드 또는 협력사명 검색창 -->
-      <div class="section-search-box">
-        <div class="form-group">
-          <label>
-            <span>🏢 회사코드 또는 협력사명 검색</span>
-            <span style="font-size:11.5px;color:var(--slate-500);font-weight:500;">업체 선별</span>
-          </label>
-          <div class="input-wrapper">
-            <span class="input-icon">🏢</span>
-            <input type="text" id="companyInput" placeholder="예: 101113, 삼립, 평택물류센터 등" autocomplete="off">
-            <button class="clear-btn" id="clearCompanyBtn" onclick="clearCompany()">&times;</button>
-          </div>
-        </div>
+      <div class="filter-card">
+        <span class="filter-icon">🏢</span>
+        <input type="text" id="companyInput" placeholder="회사코드 또는 협력사명 검색" autocomplete="off">
+        <button class="clear-filter-btn" id="clearCompanyBtn" onclick="clearCompany()">&times;</button>
       </div>
 
       <!-- 4. 협력사 디렉토리 -->
-      <div class="company-card">
-        <div class="card-header">
-          <div style="display:flex;align-items:center;gap:6px;">
+      <div class="glass-panel">
+        <div class="panel-top-bar">
+          <div class="panel-heading">
+            <span>🗂️</span>
             <span>협력사 디렉토리</span>
-            <span class="badge-pill" id="companyCountBadge">0개사</span>
           </div>
-          <div style="display:flex;align-items:center;gap:6px;">
-            <input type="checkbox" id="selectAllVendorsCheckbox" onchange="toggleSelectAllVendors(this)" title="전체 선택">
-            <button class="btn btn-danger" id="batchDeleteVendorBtn" onclick="requirePasswordAndExecute(deleteSelectedVendors)" style="height:26px;padding:0 8px;font-size:11px;" disabled>
-              🗑️ (<span id="selectedVendorCountSpan">0</span>)
-            </button>
+          <span class="glowing-pill" id="companyCountBadge">0개사</span>
+        </div>
+
+        <div class="panel-scrollable">
+          <ul class="company-list" id="companyList"></ul>
+          <div id="companyEmptyGuide" style="padding:60px 20px;text-align:center;color:var(--slate-400);font-size:13px;display:none;">
+            바이어 코드를 입력하시면<br>해당 협력사가 표시됩니다.
           </div>
         </div>
-        <ul class="company-list" id="companyList"></ul>
-        <div id="companyEmptyGuide" style="padding:40px 16px;text-align:center;color:var(--slate-400);font-size:13px;display:none;">
-          상단에 바이어 코드를 입력하면<br>해당 협력사 목록이 표시됩니다.
-        </div>
       </div>
     </div>
 
-  </div>
-</div>
-
-<!-- 패스워드 인증 모달 -->
-<div class="modal-overlay" id="passwordModal">
-  <div class="modal" style="max-width:380px;">
-    <div class="modal-header">
-      <h3 style="display:flex;align-items:center;gap:6px;">🔒 관리자 인증 필요</h3>
-      <button class="clear-btn" style="display:block;" onclick="closeModal('passwordModal')">&times;</button>
-    </div>
-    <div class="modal-body" style="padding:22px 18px;">
-      <p style="font-size:13px;color:var(--slate-600);line-height:1.5;">
-        데이터 변경 및 업로드는 관리자 권한이 필요합니다.<br>
-        <b>6자리 관리자 패스워드</b>를 입력해주세요.
-      </p>
-      <div class="pwd-input-wrap">
-        <input type="password" id="adminPasswordInput" inputmode="numeric" maxlength="6" placeholder="••••••" autocomplete="off">
-        <div class="pwd-error-msg" id="pwdErrorMsg">비밀번호가 일치하지 않습니다. 다시 입력해주세요.</div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal('passwordModal')">취소</button>
-      <button class="btn btn-primary" onclick="verifyAdminPassword()">확인</button>
-    </div>
-  </div>
-</div>
-
-<!-- 품목 추가 모달 -->
-<div class="modal-overlay" id="addProductModal">
-  <div class="modal">
-    <div class="modal-header"><h3>➕ 새 품목 등록</h3><button class="clear-btn" style="display:block;" onclick="closeModal('addProductModal')">&times;</button></div>
-    <div class="modal-body">
-      <div class="form-group"><label>제품 코드 (필수)</label><input type="text" id="newProdCode" placeholder="예: 320249" style="height:40px;padding:0 12px;border:1.5px solid var(--slate-200);border-radius:8px;"></div>
-      <div class="form-group"><label>품목명 (필수)</label><input type="text" id="newProdName" placeholder="예: 스윗 부드러운 또띠아 10인치" style="height:40px;padding:0 12px;border:1.5px solid var(--slate-200);border-radius:8px;"></div>
-      <div class="form-group"><label>바이어 코드 (필수/권장)</label><input type="text" id="newProdBuyer" placeholder="바이어 코드를 입력하세요" style="height:40px;padding:0 12px;border:1.5px solid var(--slate-200);border-radius:8px;"></div>
-      <div class="form-group"><label>담당 협력사 지정</label><select id="newProdVendor" style="width:100%;height:40px;padding:0 10px;border:1.5px solid var(--slate-200);border-radius:8px;"></select></div>
-    </div>
-    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('addProductModal')">취소</button><button class="btn btn-primary" onclick="saveNewProduct()">저장</button></div>
-  </div>
-</div>
-
-<!-- 업체 추가 모달 -->
-<div class="modal-overlay" id="addVendorModal">
-  <div class="modal">
-    <div class="modal-header"><h3>🏢 새 협력사 등록</h3><button class="clear-btn" style="display:block;" onclick="closeModal('addVendorModal')">&times;</button></div>
-    <div class="modal-body">
-      <div class="form-group"><label>협력사 코드 (필수)</label><input type="text" id="newVendorCode" placeholder="예: 101113" style="height:40px;padding:0 12px;border:1.5px solid var(--slate-200);border-radius:8px;"></div>
-      <div class="form-group"><label>협력사명 (필수)</label><input type="text" id="newVendorName" placeholder="예: 평택물류센터" style="height:40px;padding:0 12px;border:1.5px solid var(--slate-200);border-radius:8px;"></div>
-      <div class="form-group"><label>매칭 키워드 (쉼표 구분)</label><input type="text" id="newVendorKeywords" placeholder="예: 평택물류, 물류센터" style="height:40px;padding:0 12px;border:1.5px solid var(--slate-200);border-radius:8px;"></div>
-    </div>
-    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('addVendorModal')">취소</button><button class="btn btn-primary" onclick="saveNewVendor()">저장</button></div>
-  </div>
-</div>
-
-<!-- 파일 업로드 모달 -->
-<div class="modal-overlay" id="uploadModal">
-  <div class="modal">
-    <div class="modal-header"><h3>📂 엑셀/CSV 일괄 업로드</h3><button class="clear-btn" style="display:block;" onclick="closeModal('uploadModal')">&times;</button></div>
-    <div class="modal-body">
-      <div style="background:#f8fafc;padding:12px;border:1px solid #e2e8f0;border-radius:8px;font-size:12.5px;color:#475569;line-height:1.6;">
-        <b>💡 대용량 데이터 고속 처리 지원</b><br>
-        • 수만 행 데이터도 브라우저 멈춤 없이 1초 이내에 안전하게 업로드됩니다.<br>
-        • <b>표준 권장 열:</b> <code>제품코드, 품목명, 바이어코드, 협력사코드, 협력사명</code><br>
-        • 화면 어디에든 파일을 <b>마우스로 끌어다 놓으시면(Drag & Drop)</b> 즉시 자동 업로드됩니다.<br>
-        <div style="margin-top:6px;">
-          <a href="javascript:void(0)" onclick="downloadSampleCSV()" style="color:var(--primary);font-weight:700;text-decoration:underline;">
-            👉 바이어코드 포함 표준 CSV 양식 다운로드
-          </a>
-        </div>
-      </div>
-      <div class="upload-dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()">
-        <div style="font-weight:700;margin-bottom:6px;font-size:14.5px;color:var(--slate-800);">여기를 터치(클릭)하거나 파일을 끌어다 놓으세요</div>
-        <div style="font-size:12px;color:var(--slate-500);">지원 포맷: .csv, .xlsx, .xls</div>
-        <input type="file" id="fileInput" accept=".csv, .xlsx, .xls" style="display:none;" onchange="handleFileSelect(event)">
-      </div>
-      <div id="uploadStatusText" style="font-size:13px;color:var(--primary);font-weight:700;display:none;padding:10px;background:#eff6ff;border-radius:6px;"></div>
-    </div>
-    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('uploadModal')">닫기</button></div>
   </div>
 </div>
 
 <script>
-  const ADMIN_PASSWORD = "226308";
-  let pendingAuthCallback = null;
-
   const defaultVendors = [{"code": "101113", "name": "평택물류센터", "keywords": ["평택물류센터"]}, {"code": "1000007", "name": "(주)조선호텔앤리조트", "keywords": ["(주)조선호텔앤리조트"]}, {"code": "1002269", "name": "대두식품", "keywords": ["대두식품"]}, {"code": "1003465", "name": "주식회사 삼립", "keywords": ["주식회사 삼립"]}, {"code": "1003481", "name": "(주)세미원푸드", "keywords": ["(주)세미원푸드"]}, {"code": "1003528", "name": "(주)랜시푸드", "keywords": ["(주)랜시푸드"]}, {"code": "1003547", "name": "(주)제원인터내쇼날", "keywords": ["(주)제원인터내쇼날"]}, {"code": "1003616", "name": "구스에프앤비(주)", "keywords": ["구스에프앤비(주)"]}, {"code": "1023118", "name": "서울식품공업(주)", "keywords": ["서울식품공업(주)"]}, {"code": "1029291", "name": "(주)케이비아이", "keywords": ["(주)케이비아이"]}, {"code": "1030053", "name": "씨제이푸드빌(주)", "keywords": ["씨제이푸드빌(주)"]}, {"code": "1033942", "name": "주식회사 참조은에스에프", "keywords": ["주식회사 참조은에스에프"]}, {"code": "1034465", "name": "(주)딤섬", "keywords": ["(주)딤섬"]}, {"code": "1034874", "name": "마늘빵집", "keywords": ["마늘빵집"]}, {"code": "1038150", "name": "㈜신라명과", "keywords": ["㈜신라명과"]}, {"code": "1038735", "name": "(주)푸드올마켓", "keywords": ["(주)푸드올마켓"]}, {"code": "1039047", "name": "(주)미송엔터프라이즈", "keywords": ["(주)미송엔터프라이즈"]}, {"code": "1042020", "name": "(주)하나푸드", "keywords": ["(주)하나푸드"]}, {"code": "1042251", "name": "롯데웰푸드(주)", "keywords": ["롯데웰푸드(주)"]}, {"code": "1042988", "name": "(주)선인", "keywords": ["(주)선인"]}, {"code": "1044200", "name": "(주)비에스홀딩스", "keywords": ["(주)비에스홀딩스"]}, {"code": "1046747", "name": "사조대림 영업본부", "keywords": ["사조대림 영업본부"]}, {"code": "1049480", "name": "주식회사 푸드앤바이", "keywords": ["주식회사 푸드앤바이"]}, {"code": "1053630", "name": "주식회사 투민로직스", "keywords": ["주식회사 투민로직스"]}, {"code": "1100978", "name": "(주)이지웨이", "keywords": ["(주)이지웨이"]}, {"code": "1101606", "name": "(주)씨에스아이팩토리", "keywords": ["(주)씨에스아이팩토리"]}, {"code": "1102026", "name": "로빈스프렌즈 주식회사", "keywords": ["로빈스프렌즈 주식회사"]}, {"code": "1102493", "name": "ARYZTA FOOD SOLUTIONS JAPAN CO LTD", "keywords": ["ARYZTA FOOD SOLUTIONS JAPAN CO LTD"]}, {"code": "1103247", "name": "(주)바로군", "keywords": ["(주)바로군"]}, {"code": "1103568", "name": "(주)디엔비", "keywords": ["(주)디엔비"]}, {"code": "1104385", "name": "(주)비엘컴퍼니", "keywords": ["(주)비엘컴퍼니"]}, {"code": "1104704", "name": "(주)이정파트너스", "keywords": ["(주)이정파트너스"]}, {"code": "1104768", "name": "(주)대광푸드", "keywords": ["(주)대광푸드"]}, {"code": "1104980", "name": "(주)다인경주빵", "keywords": ["(주)다인경주빵"]}, {"code": "1105658", "name": "(주)한설당", "keywords": ["(주)한설당"]}, {"code": "1106186", "name": "(주)파리크라상", "keywords": ["(주)파리크라상"]}, {"code": "1106788", "name": "(주)더브레드블루", "keywords": ["(주)더브레드블루"]}];
   const defaultProducts = [{"code": "320249", "name": "스윗 부드러운 또띠아 10인치 SPC삼립 50G*12개*10봉, 10인치", "vendor_codes": ["101113", "1003465"], "buyer_code": "B101"}, {"code": "325960", "name": "탕종 세사미 베이글 로빈스프렌즈 99G, 슬라이스", "vendor_codes": ["101113", "1102026"], "buyer_code": "B102"}, {"code": "339002", "name": "크랜베리스콘 디엔비 55G*40개", "vendor_codes": ["101113", "1103568"], "buyer_code": "B103"}, {"code": "339633", "name": "SB크로와상번 서울식품공업 60G*12개*3팩, 슬라이스", "vendor_codes": ["101113", "1023118"], "buyer_code": "B104"}, {"code": "341968", "name": "밀크앤허니 치즈베이글 로빈스프렌즈 100G*4개", "vendor_codes": ["101113", "1102026"], "buyer_code": "B101"}, {"code": "341969", "name": "밀크앤허니 탕종 통밀베이글 로빈스프렌즈 95G*4개", "vendor_codes": ["101113", "1102026"], "buyer_code": "B102"}, {"code": "341970", "name": "밀크앤허니 탕종 플레인베이글 로빈스프렌즈 95G*4개", "vendor_codes": ["101113", "1102026"], "buyer_code": "B103"}, {"code": "342058", "name": "클래식 화이트 피타 엔젤베이커리 100G*60개", "vendor_codes": ["101113", "1104704"], "buyer_code": "B104"}, {"code": "342336", "name": "식물성크림빵 (오리지날) 디엔비 100G*18개", "vendor_codes": ["101113", "1103568"], "buyer_code": "B101"}, {"code": "342337", "name": "식물성크림빵(딸기) 디엔비 100G*18개", "vendor_codes": ["101113", "1103568"], "buyer_code": "B102"}, {"code": "342338", "name": "식물성크림빵(초코) 디엔비 100G*18개", "vendor_codes": ["101113", "1103568"], "buyer_code": "B103"}, {"code": "344010", "name": "고구마피자빵 디엔비 60G*30개", "vendor_codes": ["101113", "1103568"], "buyer_code": "B104"}, {"code": "344011", "name": "오리지널피자빵 디엔비 60G*30개", "vendor_codes": ["101113", "1103568"], "buyer_code": "B101"}, {"code": "344093", "name": "클래식 화이트 피타 엔젤베이커리 100G", "vendor_codes": ["101113", "1104704"], "buyer_code": "B102"}, {"code": "344430", "name": "수제 우리밀 초코파이 피스타치오 영푸드시스템 30G*30개", "vendor_codes": ["101113", "1104768"], "buyer_code": "B103"}, {"code": "344431", "name": "수제 우리밀 초코파이 영푸드시스템 30G*30개", "vendor_codes": ["101113", "1104768"], "buyer_code": "B104"}, {"code": "346946", "name": "베키아에누보 고단백 통밀 미니베이글 50G*8개", "vendor_codes": ["101113", "1003616"], "buyer_code": "B101"}, {"code": "346947", "name": "베키아에누보 고단백 세서미 미니베이글 50G*8개", "vendor_codes": ["101113", "1003616"], "buyer_code": "B102"}, {"code": "347034", "name": "십자가빵 아리스타 550G*12개", "vendor_codes": ["101113", "1102493"], "buyer_code": "B103"}, {"code": "347736", "name": "콘브레드 디엔비 100G*3개*16팩", "vendor_codes": ["101113", "1103568"], "buyer_code": "B104"}, {"code": "347737", "name": "우유모닝롤 디엔비 30G*8개*12팩", "vendor_codes": ["101113", "1103568"], "buyer_code": "B101"}, {"code": "347738", "name": "올리브모닝롤 디엔비 30G*8개*12팩", "vendor_codes": ["101113", "1103568"], "buyer_code": "B102"}, {"code": "347739", "name": "야채모닝롤 디엔비 30G*8개*12팩", "vendor_codes": ["101113", "1103568"], "buyer_code": "B103"}, {"code": "347740", "name": "단팥소보루빵 디엔비 100G*3개*12팩", "vendor_codes": ["101113", "1103568"], "buyer_code": "B104"}, {"code": "347741", "name": "백단팥빵 디엔비 85G*3개*12팩", "vendor_codes": ["101113", "1103568"], "buyer_code": "B101"}, {"code": "347742", "name": "완두앙금빵 디엔비 85G*3개*12팩", "vendor_codes": ["101113", "1103568"], "buyer_code": "B102"}, {"code": "347743", "name": "단팥빵 디엔비 85G*3개*12팩", "vendor_codes": ["101113", "1103568"], "buyer_code": "B103"}, {"code": "348802", "name": "조선호텔 앙금빵 코리아식품 260G, 65G*4개", "vendor_codes": ["101113", "1000007"], "buyer_code": "B104"}, {"code": "349420", "name": "신세계라운지 미니 소금빵 비엘컴퍼니 38G*24개", "vendor_codes": ["101113", "1104385"], "buyer_code": "B101"}, {"code": "349448", "name": "신세계푸드 딸기우유생크림빵 50G*20개", "vendor_codes": ["101113", "1042020"], "buyer_code": "B102"}, {"code": "349996", "name": "신세계라운지 말차만쥬 대두식품 35G*60개", "vendor_codes": ["101113", "1002269"], "buyer_code": "B103"}, {"code": "349998", "name": "신세계라운지 구운빵이구마 대두식품 85G*27개", "vendor_codes": ["101113", "1002269"], "buyer_code": "B104"}, {"code": "350002", "name": "신세계라운지 땅콩가득빵 화과방 50G*56개", "vendor_codes": ["101113", "1002269"], "buyer_code": "B101"}, {"code": "350208", "name": "찰보리빵 다인경주빵 30G*100개", "vendor_codes": ["101113", "1104980"], "buyer_code": "B102"}, {"code": "350209", "name": "경주빵 다인경주빵 38G*100개", "vendor_codes": ["101113", "1104980"], "buyer_code": "B103"}, {"code": "350481", "name": "국군의날 수제 우리밀 초코파이 피스타치오 영푸드시스템 30G*30개", "vendor_codes": ["101113", "1104768"], "buyer_code": "B104"}, {"code": "350511", "name": "신세계푸드 우유생크림빵 50G*24개", "vendor_codes": ["101113", "1042020"], "buyer_code": "B101"}, {"code": "350512", "name": "신세계푸드 딸기우유생크림빵 50G*24개", "vendor_codes": ["101113", "1042020"], "buyer_code": "B102"}, {"code": "351213", "name": "미니초코바게트 바로군 40G*25개*5팩", "vendor_codes": ["101113", "1103247"], "buyer_code": "B103"}, {"code": "351503", "name": "호떡 한설당 65G*50개", "vendor_codes": ["101113", "1105658"], "buyer_code": "B104"}, {"code": "351504", "name": "버터크로와상 한설당 35G*35개", "vendor_codes": ["101113", "1105658"], "buyer_code": "B101"}, {"code": "352164", "name": "롤치즈브레드 서울식품공업 30G*36개", "vendor_codes": ["101113", "1023118"], "buyer_code": "B102"}, {"code": "352665", "name": "플레인스콘 씨에스아이팩토리 40G*18개", "vendor_codes": ["101113", "1101606"], "buyer_code": "B103"}, {"code": "352926", "name": "모카찰떡 초코파이 참조은에스에프 60G*54개", "vendor_codes": ["101113", "1033942"], "buyer_code": "B104"}, {"code": "250946", "name": "바질스콘 대두식품 45G*16개", "vendor_codes": ["1002269"], "buyer_code": "B101"}, {"code": "336030", "name": "진짜 감자빵 대두식품 90G*15개*4팩", "vendor_codes": ["1002269"], "buyer_code": "B102"}, {"code": "336031", "name": "진짜 고구마빵 대두식품 90G*15개*4팩", "vendor_codes": ["1002269"], "buyer_code": "B103"}, {"code": "339968", "name": "소프트원 초코 대두식품 50G*28개", "vendor_codes": ["1002269"], "buyer_code": "B104"}, {"code": "339969", "name": "소프트원 녹차 대두식품 50G*28개", "vendor_codes": ["1002269"], "buyer_code": "B101"}, {"code": "339970", "name": "구운도넛밤빵 대두식품 60G*45개", "vendor_codes": ["1002269"], "buyer_code": "B102"}, {"code": "339971", "name": "구운도넛팥빵 대두식품 60G*45개", "vendor_codes": ["1002269"], "buyer_code": "B103"}, {"code": "339972", "name": "고구마앙빵 대두식품 35G*60개", "vendor_codes": ["1002269"], "buyer_code": "B104"}, {"code": "12172", "name": "골드버터롤 SPC삼립 360G", "vendor_codes": ["1003465"], "buyer_code": "B101"}, {"code": "45153", "name": "화이트치아바타 SPC삼립 70G*6개", "vendor_codes": ["1003465"], "buyer_code": "B102"}, {"code": "48098", "name": "허니버터브래드 SPC삼립 1.4KG", "vendor_codes": ["1003465"], "buyer_code": "B103"}, {"code": "56258", "name": "정통크림빵 SPC삼립 70G", "vendor_codes": ["1003465"], "buyer_code": "B104"}, {"code": "65667", "name": "허니브레드 SPC삼립 150G*2개*4팩", "vendor_codes": ["1003465"], "buyer_code": "B101"}, {"code": "85117", "name": "아침미소토스트 SPC삼립 700G", "vendor_codes": ["1003465"], "buyer_code": "B102"}, {"code": "149164", "name": "쫄깃한잉글리쉬머핀 SPC삼립 60G*4개", "vendor_codes": ["1003465"], "buyer_code": "B103"}, {"code": "149455", "name": "주종단팥크림빵 SPC삼립 100G", "vendor_codes": ["1003465"], "buyer_code": "B104"}, {"code": "159100", "name": "크루통 SPC삼립 1KG*2개", "vendor_codes": ["1003465"], "buyer_code": "B101"}, {"code": "194371", "name": "요요꿀호떡 SPC삼립 25G*16개", "vendor_codes": ["1003465"], "buyer_code": "B102"}, {"code": "194372", "name": "옛날꿀호떡 SPC삼립 57G*9개", "vendor_codes": ["1003465"], "buyer_code": "B103"}, {"code": "203295", "name": "꼬마단팥호빵 SPC삼립 40G*6개", "vendor_codes": ["1003465"], "buyer_code": "B104"}, {"code": "210246", "name": "꼬마야채호빵 SPC삼립 40G*6개", "vendor_codes": ["1003465"], "buyer_code": "B101"}, {"code": "226160", "name": "소프트프랑스S 바게트 SPC삼립 50G*10개", "vendor_codes": ["1003465"], "buyer_code": "B102"}, {"code": "233288", "name": "버터롤클래식 SPC삼립 546G", "vendor_codes": ["1003465"], "buyer_code": "B103"}, {"code": "248626", "name": "미각제빵소 초코소라빵 SPC삼립 80G", "vendor_codes": ["1003465"], "buyer_code": "B104"}, {"code": "255310", "name": "모닝바게트-에스 SPC삼립 185G*5개", "vendor_codes": ["1003465"], "buyer_code": "B101"}, {"code": "311541", "name": "더블치즈후레쉬팡 SPC삼립 98G", "vendor_codes": ["1003465"], "buyer_code": "B102"}, {"code": "311542", "name": "땅콩콕콕꿀호떡 SPC삼립 138G", "vendor_codes": ["1003465"], "buyer_code": "B103"}, {"code": "311574", "name": "발효스트로베리데니쉬 SPC삼립 100G", "vendor_codes": ["1003465"], "buyer_code": "B104"}, {"code": "311575", "name": "뉴정통밤만쥬 SPC삼립 23G*100개", "vendor_codes": ["1003465"], "buyer_code": "B101"}, {"code": "311576", "name": "리뉴얼 주종 슈크림빵 SPC삼립 90G", "vendor_codes": ["1003465"], "buyer_code": "B102"}, {"code": "311579", "name": "탕종빅땅콩샌드 SPC삼립 160G", "vendor_codes": ["1003465"], "buyer_code": "B103"}, {"code": "322408", "name": "브라운브레드 SPC삼립 60G", "vendor_codes": ["1003465"], "buyer_code": "B104"}, {"code": "326646", "name": "정통단팥빵 SPC삼립 85G", "vendor_codes": ["1003465"], "buyer_code": "B101"}, {"code": "326647", "name": "정통크림빵 SPC삼립 75G", "vendor_codes": ["1003465"], "buyer_code": "B102"}, {"code": "326648", "name": "발효버터 빅스위트데니쉬 SPC삼립 100G", "vendor_codes": ["1003465"], "buyer_code": "B103"}, {"code": "343450", "name": "정통모닝빵 SPC삼립 270G*8팩", "vendor_codes": ["1003465"], "buyer_code": "B104"}, {"code": "352803", "name": "펄슈가 벨지안미니와플 에스피씨삼립 30G*20개", "vendor_codes": ["1003465"], "buyer_code": "B101"}, {"code": "10938", "name": "이솝찐빵 세미원 25G*40개", "vendor_codes": ["1003481"], "buyer_code": "B102"}, {"code": "200635", "name": "갈릭버터난 세미원푸드 50G*20개", "vendor_codes": ["1003481"], "buyer_code": "B103"}, {"code": "208534", "name": "수제꽃빵 세미원푸드 30G*30개", "vendor_codes": ["1003481"], "buyer_code": "B104"}, {"code": "340327", "name": "중화번 QING BAIFU FOOD 35G*30개", "vendor_codes": ["1003481"], "buyer_code": "B101"}, {"code": "341171", "name": "숲속친구들 찐빵 세미원푸드 25G*40개", "vendor_codes": ["1003481"], "buyer_code": "B102"}, {"code": "341172", "name": "바다친구들 찐빵 세미원푸드 25G*40개", "vendor_codes": ["1003481"], "buyer_code": "B103"}, {"code": "352578", "name": "미션 콘또띠아 세미원푸드 14.18G*60개, 6인치", "vendor_codes": ["1003481"], "buyer_code": "B104"}, {"code": "352579", "name": "미션 피타브레드 세미원푸드 80G*5개, 6인치", "vendor_codes": ["1003481"], "buyer_code": "B101"}, {"code": "352580", "name": "플레이난 세미원푸드 70G*5개", "vendor_codes": ["1003481"], "buyer_code": "B102"}, {"code": "188033", "name": "꽃빵 랜시푸드 30G*50개", "vendor_codes": ["1003528"], "buyer_code": "B103"}, {"code": "228543", "name": "바게트 제원인터내쇼날 280G*25개", "vendor_codes": ["1003547"], "buyer_code": "B104"}, {"code": "338568", "name": "대파스콘 청솔식품 55G*72개", "vendor_codes": ["1003547"], "buyer_code": "B101"}, {"code": "340979", "name": "크로아상 40G 브리도 40G*165개", "vendor_codes": ["1003547"], "buyer_code": "B102"}, {"code": "345446", "name": "유자스콘 문식품 50G*64개", "vendor_codes": ["1003547"], "buyer_code": "B103"}, {"code": "347975", "name": "뺑 세레알 BRIDOR 450G*16개", "vendor_codes": ["1003547"], "buyer_code": "B104"}, {"code": "350571", "name": "르 꽁플레 BRIDOR 330G*26개", "vendor_codes": ["1003547"], "buyer_code": "B101"}, {"code": "352841", "name": "스페셜 무화과&허니롤 PANIDOR 33G*250개", "vendor_codes": ["1003547"], "buyer_code": "B102"}, {"code": "344670", "name": "어니언 베이글 베이글코리아 110G*6개", "vendor_codes": ["1003616"], "buyer_code": "B103"}, {"code": "344671", "name": "블루베리 베이글 베이글코리아 110G*6개", "vendor_codes": ["1003616"], "buyer_code": "B104"}, {"code": "344672", "name": "플레인 베이글B 베이글코리아 110G*6개", "vendor_codes": ["1003616"], "buyer_code": "B101"}, {"code": "346487", "name": "모짜렐라치즈 베이글 베이글코리아 120G*6개", "vendor_codes": ["1003616"], "buyer_code": "B102"}, {"code": "351323", "name": "밀크앤허니 어니언모닝베이글 110G*5개", "vendor_codes": ["1003616"], "buyer_code": "B103"}, {"code": "352165", "name": "크로와상번 서울식품공업 60G*6개*6팩", "vendor_codes": ["1023118"], "buyer_code": "B104"}, {"code": "95147", "name": "물류)또즈랑 밀또띠아 남향푸드또띠아 700G*10팩, 9호", "vendor_codes": ["1029291"], "buyer_code": "B101"}, {"code": "142009", "name": "평면씬크러스트피자도우 12인치 대경푸드 180G*5개", "vendor_codes": ["1029291"], "buyer_code": "B102"}, {"code": "256331", "name": "또즈랑 밀또띠아 남향푸드또띠아 65G*12개, 10호", "vendor_codes": ["1029291"], "buyer_code": "B103"}, {"code": "320300", "name": "화덕피자도우12인치 뉴태리푸드 300G*10개*2팩", "vendor_codes": ["1029291"], "buyer_code": "B104"}, {"code": "55573", "name": "슈크림빵 CJ푸드빌 75G", "vendor_codes": ["1030053"], "buyer_code": "B101"}, {"code": "159099", "name": "미니치즈롤인 CJ푸드빌 80G", "vendor_codes": ["1030053"], "buyer_code": "B102"}, {"code": "200638", "name": "겹겹이치즈스틱 CJ푸드빌 120G", "vendor_codes": ["1030053"], "buyer_code": "B103"}, {"code": "220900", "name": "신선해고소해후레쉬크림빵 CJ푸드빌 62G", "vendor_codes": ["1030053"], "buyer_code": "B104"}, {"code": "220901", "name": "맛보로소보로 CJ푸드빌 66G", "vendor_codes": ["1030053"], "buyer_code": "B101"}, {"code": "220902", "name": "팥이빵빵단팥빵 CJ푸드빌 86G", "vendor_codes": ["1030053"], "buyer_code": "B102"}, {"code": "220903", "name": "완두가득완두앙금빵 CJ푸드빌 75G", "vendor_codes": ["1030053"], "buyer_code": "B103"}, {"code": "220904", "name": "진짜고소한땅콩크림빵 CJ푸드빌 67G", "vendor_codes": ["1030053"], "buyer_code": "B104"}, {"code": "225892", "name": "겹겹이밀크롤인 CJ푸드빌 19.750G*8개", "vendor_codes": ["1030053"], "buyer_code": "B101"}, {"code": "252409", "name": "한입두입미니단팥빵 씨제이푸드빌 160G", "vendor_codes": ["1030053"], "buyer_code": "B102"}, {"code": "333318", "name": "샤샤핑이 좋아하는 미니샌드 연유 CJ푸드빌 65G", "vendor_codes": ["1030053"], "buyer_code": "B103"}, {"code": "333319", "name": "말랑핑이 좋아하는 미니샌드 스트로베리 CJ푸드빌 65G", "vendor_codes": ["1030053"], "buyer_code": "B104"}, {"code": "339381", "name": "오븐에구운 초코칩링도넛 씨제이푸드빌 35G", "vendor_codes": ["1030053"], "buyer_code": "B101"}, {"code": "339382", "name": "오븐에구운 버터링도넛 씨제이푸드빌 35G", "vendor_codes": ["1030053"], "buyer_code": "B102"}, {"code": "339383", "name": "땅콩크림 소보로빵 씨제이푸드빌 95G", "vendor_codes": ["1030053"], "buyer_code": "B103"}, {"code": "346465", "name": "치즈만난감자그라탕 CJ푸드빌 88G*27개", "vendor_codes": ["1030053"], "buyer_code": "B104"}, {"code": "346466", "name": "트리플치즈방앗간 CJ푸드빌 88G*27개", "vendor_codes": ["1030053"], "buyer_code": "B101"}, {"code": "348165", "name": "우유스틱 브레드 CJ푸드빌 90G", "vendor_codes": ["1030053"], "buyer_code": "B102"}, {"code": "349446", "name": "신선해달콤해초코크림빵 CJ푸드빌 62G", "vendor_codes": ["1030053"], "buyer_code": "B103"}, {"code": "352515", "name": "신선해상큼해딸기크림빵 씨제이푸드빌 62G", "vendor_codes": ["1030053"], "buyer_code": "B104"}, {"code": "353603", "name": "사과잼소보로빵 씨케이하우스 90G", "vendor_codes": ["1030053"], "buyer_code": "B101"}, {"code": "353634", "name": "달콤꿀호떡 씨제이푸드빌 95G", "vendor_codes": ["1030053"], "buyer_code": "B102"}, {"code": "340266", "name": "말차생크림빵 참조은에스에프 65G*48개", "vendor_codes": ["1033942"], "buyer_code": "B103"}, {"code": "340267", "name": "우유생크림빵 참조은에스에프 65G*48개", "vendor_codes": ["1033942"], "buyer_code": "B104"}, {"code": "172912", "name": "가리비형화권 딤섬 30G*40개", "vendor_codes": ["1034465"], "buyer_code": "B101"}, {"code": "182785", "name": "꽃빵 딤섬 30G*50개", "vendor_codes": ["1034465"], "buyer_code": "B102"}, {"code": "215439", "name": "애플파이 딤섬 15G*30개", "vendor_codes": ["1034465"], "buyer_code": "B103"}, {"code": "237801", "name": "밀크앤허니 바삭한마늘바게트 350G", "vendor_codes": ["1034874"], "buyer_code": "B104"}, {"code": "347591", "name": "옛날단팥빵 신라명과 50G*10개*5팩", "vendor_codes": ["1038150"], "buyer_code": "B101"}, {"code": "350174", "name": "속이 꽉 찬 단팥빵 신라명과 80G*12개", "vendor_codes": ["1038150"], "buyer_code": "B102"}, {"code": "13565", "name": "또즈랑 밀또띠아 남향푸드또띠아 240G, 6호", "vendor_codes": ["1038735"], "buyer_code": "B103"}, {"code": "13569", "name": "또띠아 10인치 글로벌YK 790G*12팩", "vendor_codes": ["1038735"], "buyer_code": "B104"}, {"code": "45912", "name": "또즈랑 밀또띠아 남향푸드또띠아 496G, 8호", "vendor_codes": ["1038735"], "buyer_code": "B101"}, {"code": "259476", "name": "라레이나 밀또띠아 글로벌YK 340G*24개", "vendor_codes": ["1038735"], "buyer_code": "B102"}, {"code": "169032", "name": "크림치즈프레즐 미송엔터프라이즈 99G*8개*6팩", "vendor_codes": ["1039047"], "buyer_code": "B103"}, {"code": "314818", "name": "SW 소프트 바게트 하나푸드 65G*4개*11팩, 슬라이스", "vendor_codes": ["1042020"], "buyer_code": "B104"}, {"code": "160165", "name": "옥수수모닝빵 롯데제과 360G", "vendor_codes": ["1042251"], "buyer_code": "B101"}, {"code": "160166", "name": "허니크림빵 롯데제과 90G", "vendor_codes": ["1042251"], "buyer_code": "B102"}, {"code": "160171", "name": "꼬마꿀호떡 롯데제과 22G*5개", "vendor_codes": ["1042251"], "buyer_code": "B103"}, {"code": "160172", "name": "팥크림빵 롯데제과 90G", "vendor_codes": ["1042251"], "buyer_code": "B104"}, {"code": "160173", "name": "투투호떡 롯데제과 60G*2개", "vendor_codes": ["1042251"], "buyer_code": "B101"}, {"code": "160178", "name": "왕만쥬 롯데제과 95G", "vendor_codes": ["1042251"], "buyer_code": "B102"}, {"code": "160188", "name": "단팥가득만족두배 단팥빵 롯데제과 105G", "vendor_codes": ["1042251"], "buyer_code": "B103"}, {"code": "160189", "name": "달콤한땅콩소보로 롯데제과 90G", "vendor_codes": ["1042251"], "buyer_code": "B104"}, {"code": "160190", "name": "달콤한갈릭소보로 롯데제과 100G", "vendor_codes": ["1042251"], "buyer_code": "B101"}, {"code": "219164", "name": "빅단팥빵 롯데제과 105G", "vendor_codes": ["1042251"], "buyer_code": "B102"}, {"code": "224153", "name": "크로와상 롯데제과 증평 40G", "vendor_codes": ["1042251"], "buyer_code": "B103"}, {"code": "232407", "name": "달콤한정통만쥬 롯데제과 30G*10개", "vendor_codes": ["1042251"], "buyer_code": "B104"}, {"code": "234549", "name": "이천쌀슈크림 롯데제과 90G", "vendor_codes": ["1042251"], "buyer_code": "B101"}, {"code": "311740", "name": "미니소보로 롯데제과 375G", "vendor_codes": ["1042251"], "buyer_code": "B102"}, {"code": "311741", "name": "한입쏙미니만쥬 롯데제과 350G", "vendor_codes": ["1042251"], "buyer_code": "B103"}, {"code": "314751", "name": "고소한옥수수단팥빵 롯데제과 105G", "vendor_codes": ["1042251"], "buyer_code": "B104"}, {"code": "314752", "name": "빅단팥슈크림빵 롯데제과 105G", "vendor_codes": ["1042251"], "buyer_code": "B101"}, {"code": "314755", "name": "롱패스츄리 롯데제과 증평 110G", "vendor_codes": ["1042251"], "buyer_code": "B102"}, {"code": "314756", "name": "리얼카스타드슈크림빵 롯데제과 125G", "vendor_codes": ["1042251"], "buyer_code": "B103"}, {"code": "314757", "name": "미니딸기샌드 롯데제과 증평 65G", "vendor_codes": ["1042251"], "buyer_code": "B104"}, {"code": "314758", "name": "미니땅콩샌드 롯데제과 증평 65G", "vendor_codes": ["1042251"], "buyer_code": "B101"}, {"code": "314761", "name": "프리미엄슈크림패스츄리 롯데제과 증평 100G", "vendor_codes": ["1042251"], "buyer_code": "B102"}, {"code": "314762", "name": "프리미엄초코소보로패스츄리 롯데제과 증평 100G", "vendor_codes": ["1042251"], "buyer_code": "B103"}, {"code": "316872", "name": "프리미엄 소프트 땅콩샌드 롯데제과 160G", "vendor_codes": ["1042251"], "buyer_code": "B104"}, {"code": "318179", "name": "기린 고구마 크림빵 롯데제과 90G", "vendor_codes": ["1042251"], "buyer_code": "B101"}, {"code": "197296", "name": "피타브레드 선인 70G*6개*24팩", "vendor_codes": ["1042988"], "buyer_code": "B102"}, {"code": "317191", "name": "또띠아 12인치 시그니쳐 인터네셔날푸드 97G*12개*12팩, 12인치", "vendor_codes": ["1042988"], "buyer_code": "B103"}, {"code": "316391", "name": "할리스 하트파이 유로베이커리 80G*6개", "vendor_codes": ["1044200"], "buyer_code": "B104"}, {"code": "319357", "name": "한입에마늘바게트 한영식품 2KG*2개", "vendor_codes": ["1044200"], "buyer_code": "B101"}, {"code": "324498", "name": "데니쉬식빵 145G*6개", "vendor_codes": ["1044200"], "buyer_code": "B102"}, {"code": "325162", "name": "버터버터 16결 식빵 60G*8개", "vendor_codes": ["1044200"], "buyer_code": "B103"}, {"code": "343049", "name": "갈레트 브루통 핀브레드 25G*28개*12팩", "vendor_codes": ["1044200"], "buyer_code": "B104"}, {"code": "346144", "name": "프리미엄 크로플 더다경 45G*10개", "vendor_codes": ["1044200"], "buyer_code": "B101"}, {"code": "346309", "name": "팔미에 유로베이커리 72G*8개", "vendor_codes": ["1044200"], "buyer_code": "B102"}, {"code": "350645", "name": "미니 데니쉬 브레드 비엘컴퍼니 60G*8개*2팩", "vendor_codes": ["1044200"], "buyer_code": "B103"}, {"code": "351619", "name": "하트파이 유로베이커리 80G*6개", "vendor_codes": ["1044200"], "buyer_code": "B104"}, {"code": "351620", "name": "몰티즈 하트파이 유로베이커리 72G*6개", "vendor_codes": ["1044200"], "buyer_code": "B101"}, {"code": "352466", "name": "플레인 하트팔미에 유로베이커리 56G*6개", "vendor_codes": ["1044200"], "buyer_code": "B102"}, {"code": "352747", "name": "크림브리오슈 성진에프에스 34G*12개*2팩", "vendor_codes": ["1044200"], "buyer_code": "B103"}, {"code": "352748", "name": "미니크로와상 성진에프에스 17G*15개*2팩", "vendor_codes": ["1044200"], "buyer_code": "B104"}, {"code": "353279", "name": "텐퍼센트 하트파이 유로베이커리 60G*6개", "vendor_codes": ["1044200"], "buyer_code": "B101"}, {"code": "261440", "name": "옛날붕어빵 슈크림 사조대림 400G", "vendor_codes": ["1046747"], "buyer_code": "B102"}, {"code": "261441", "name": "옛날붕어빵 단팥 사조대림 800G", "vendor_codes": ["1046747"], "buyer_code": "B103"}, {"code": "12298", "name": "꽃빵 세미식품 35G*40개", "vendor_codes": ["1049480"], "buyer_code": "B104"}, {"code": "13563", "name": "또띠아 12인치 글로벌YK 1.020KG", "vendor_codes": ["1049480"], "buyer_code": "B101"}, {"code": "64295", "name": "콘또띠아 6인치 글로벌YK 990G", "vendor_codes": ["1049480"], "buyer_code": "B102"}, {"code": "198760", "name": "안흥찐빵 안흥찐빵마을 50G*10개", "vendor_codes": ["1049480"], "buyer_code": "B103"}, {"code": "344891", "name": "꽃빵 하이얀식품 30G*50개", "vendor_codes": ["1049480"], "buyer_code": "B104"}, {"code": "314051", "name": "오쉐프 미니베이글 플레인 오뚜기 900G", "vendor_codes": ["1053630"], "buyer_code": "B101"}, {"code": "319372", "name": "브라운브레드 SPC삼립 60G*30개", "vendor_codes": ["1100978"], "buyer_code": "B102"}, {"code": "318397", "name": "스타벅스 탕종플레인베이글 90G", "vendor_codes": ["1102026"], "buyer_code": "B103"}, {"code": "318398", "name": "스타벅스 탕종블루베리베이글 90G", "vendor_codes": ["1102026"], "buyer_code": "B104"}, {"code": "325959", "name": "탕종 올리브 베이글 로빈스프렌즈 94G, 슬라이스", "vendor_codes": ["1102026"], "buyer_code": "B101"}, {"code": "255770", "name": "밀크앤허니 우유모닝롤 408G", "vendor_codes": ["1103247"], "buyer_code": "B102"}, {"code": "339858", "name": "고로케번 디앤비 60G*10개", "vendor_codes": ["1103568"], "buyer_code": "B103"}, {"code": "332104", "name": "미스베어 파리크라상 30G*5개", "vendor_codes": ["1106186"], "buyer_code": "B104"}, {"code": "332105", "name": "미스터베어 파리크라상 30G*5개", "vendor_codes": ["1106186"], "buyer_code": "B101"}, {"code": "332106", "name": "단팥빵 파리크라상 85G", "vendor_codes": ["1106186"], "buyer_code": "B102"}, {"code": "332107", "name": "달콤연유 크림브레드 파리크라상 64G", "vendor_codes": ["1106186"], "buyer_code": "B103"}, {"code": "332108", "name": "땅콩크림빵 파리크라상 68G", "vendor_codes": ["1106186"], "buyer_code": "B104"}, {"code": "332109", "name": "모카크림빵 파리크라상 56G", "vendor_codes": ["1106186"], "buyer_code": "B101"}, {"code": "332111", "name": "소보루빵 파리크라상 80G", "vendor_codes": ["1106186"], "buyer_code": "B102"}, {"code": "332112", "name": "슈크림빵 파리크라상 75G", "vendor_codes": ["1106186"], "buyer_code": "B103"}, {"code": "332113", "name": "초코소라빵 파리크라상 65G", "vendor_codes": ["1106186"], "buyer_code": "B104"}, {"code": "332115", "name": "한입에 두번반한 단팥크림빵 파리크라상 92G", "vendor_codes": ["1106186"], "buyer_code": "B101"}, {"code": "332117", "name": "고소한 버터 핑거스틱 파리크라상 100G", "vendor_codes": ["1106186"], "buyer_code": "B102"}, {"code": "337689", "name": "부드러운 후레쉬크림빵 파리크라상 84G", "vendor_codes": ["1106186"], "buyer_code": "B103"}, {"code": "342559", "name": "굿모닝롤 파리크라상 240G", "vendor_codes": ["1106186"], "buyer_code": "B104"}, {"code": "342564", "name": "순수우유후레쉬번 파리크라상 160G", "vendor_codes": ["1106186"], "buyer_code": "B101"}, {"code": "352523", "name": "루스틱치아바타 더브레드블루 75G*50개", "vendor_codes": ["1106788"], "buyer_code": "B102"}];
 
@@ -674,26 +966,20 @@
   let selectedVendorCode = null;
   let currentFilteredCompanies = [];
   let currentFilteredProducts = [];
-  let selectedProductCodes = new Set();
-  let selectedVendorCodes = new Set();
-
-  const STORAGE_KEY_VENDORS = "PRODUCT_SEARCH_V19_VENDORS";
-  const STORAGE_KEY_PRODUCTS = "PRODUCT_SEARCH_V19_PRODUCTS";
 
   window.addEventListener('DOMContentLoaded', () => {
     loadData();
-    setupDropzone();
 
     let debounceTimer = null;
     function debounceFilter() {
       clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(filterAndRender, 40);
+      debounceTimer = setTimeout(filterAndRender, 30);
     }
 
     const bInput = document.getElementById('buyerInput');
     if (bInput) {
       bInput.addEventListener('input', (e) => {
-        document.getElementById('clearBuyerBtn').style.display = e.target.value ? 'block' : 'none';
+        document.getElementById('clearBuyerBtn').style.display = e.target.value ? 'flex' : 'none';
         debounceFilter();
       });
     }
@@ -714,55 +1000,37 @@
         debounceFilter();
       });
     }
-
-    const pwdInput = document.getElementById('adminPasswordInput');
-    if (pwdInput) {
-      pwdInput.addEventListener('keyup', (e) => {
-        if (e.key === 'Enter') verifyAdminPassword();
-      });
-    }
   });
 
-  function quickSelectBuyer(val) {
+  function clearBuyer() {
     const bInput = document.getElementById('buyerInput');
-    bInput.value = val;
-    document.getElementById('clearBuyerBtn').style.display = 'block';
+    bInput.value = '';
+    document.getElementById('clearBuyerBtn').style.display = 'none';
     filterAndRender();
   }
 
-  function requirePasswordAndExecute(callback) {
-    pendingAuthCallback = callback;
-    const pwdInput = document.getElementById('adminPasswordInput');
-    pwdInput.value = '';
-    document.getElementById('pwdErrorMsg').style.display = 'none';
-    document.getElementById('passwordModal').style.display = 'flex';
-    setTimeout(() => pwdInput.focus(), 80);
+  function clearCompany() {
+    const cInput = document.getElementById('companyInput');
+    cInput.value = '';
+    document.getElementById('clearCompanyBtn').style.display = 'none';
+    selectedVendorCode = null;
+    filterAndRender();
   }
 
-  function verifyAdminPassword() {
-    const inputVal = (document.getElementById('adminPasswordInput').value || '').trim();
-    if (inputVal === ADMIN_PASSWORD) {
-      closeModal('passwordModal');
-      if (typeof pendingAuthCallback === 'function') {
-        const cb = pendingAuthCallback;
-        pendingAuthCallback = null;
-        cb();
-      }
-    } else {
-      const err = document.getElementById('pwdErrorMsg');
-      err.style.display = 'block';
-      err.innerText = '비밀번호가 일치하지 않습니다. 다시 입력해주세요.';
-      document.getElementById('adminPasswordInput').value = '';
-      document.getElementById('adminPasswordInput').focus();
-    }
+  function clearProduct() {
+    const pInput = document.getElementById('productInput');
+    pInput.value = '';
+    document.getElementById('clearProductBtn').style.display = 'none';
+    filterAndRender();
   }
 
   function showLoading(msg) {
     const el = document.getElementById('loadingText');
-    if (el) el.innerText = msg || "처리 중입니다...";
+    if (el) el.innerText = msg || "데이터를 불러오는 중입니다...";
     const overlay = document.getElementById('loadingOverlay');
     if (overlay) overlay.style.display = 'flex';
   }
+
   function hideLoading() {
     const overlay = document.getElementById('loadingOverlay');
     if (overlay) overlay.style.display = 'none';
@@ -788,8 +1056,8 @@
   }
 
   async function loadData() {
-    const badge = document.getElementById('syncStatusBadge');
-    if (badge) badge.innerHTML = '<span style="color:#0284c7;">🔄 동기화 중...</span>';
+    const statusText = document.getElementById('syncStatusText');
+    if (statusText) statusText.innerText = '동기화 중...';
 
     try {
       const response = await fetch('data.csv?_t=' + Date.now(), { cache: 'no-store' });
@@ -798,7 +1066,7 @@
         const rows = parseRFC4180CSV(csvText);
         if (rows && rows.length > 1) {
           parseAndApplyServerRows(rows);
-          if (badge) badge.innerHTML = '<span style="color:#16a34a;">🟢 서버 최신 (data.csv)</span>';
+          if (statusText) statusText.innerText = '최신 데이터 연동됨';
           return;
         }
       }
@@ -810,7 +1078,49 @@
     products = JSON.parse(JSON.stringify(defaultProducts));
     rebuildVendorIndexes();
     refreshUI();
-    if (badge) badge.innerHTML = '<span style="color:#64748b;">💾 기본 데이터</span>';
+    if (statusText) statusText.innerText = '기본 데이터 로드됨';
+  }
+
+  function parseRFC4180CSV(text) {
+    const rows = [];
+    let currentRow = [];
+    let currentCell = '';
+    let inQuotes = false;
+    const cleanStr = text.replace(/^﻿/, '').replace(/
+/g, '
+').replace(/
+/g, '
+');
+
+    for (let i = 0; i < cleanStr.length; i++) {
+      const ch = cleanStr[i];
+      const nextCh = cleanStr[i + 1];
+
+      if (ch === '"') {
+        if (inQuotes && nextCh === '"') {
+          currentCell += '"';
+          i++;
+        } else {
+          inQuotes = !inQuotes;
+        }
+      } else if (ch === ',' && !inQuotes) {
+        currentRow.push(currentCell.trim());
+        currentCell = '';
+      } else if (ch === '
+' && !inQuotes) {
+        currentRow.push(currentCell.trim());
+        if (currentRow.some(c => c !== '')) rows.push(currentRow);
+        currentRow = [];
+        currentCell = '';
+      } else {
+        currentCell += ch;
+      }
+    }
+    if (currentCell || currentRow.length > 0) {
+      currentRow.push(currentCell.trim());
+      if (currentRow.some(c => c !== '')) rows.push(currentRow);
+    }
+    return rows;
   }
 
   function parseAndApplyServerRows(rows) {
@@ -882,35 +1192,8 @@
     refreshUI();
   }
 
-  function saveData() {
-    try {
-      localStorage.setItem(STORAGE_KEY_VENDORS, JSON.stringify(vendors));
-      localStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify(products));
-    } catch(err) {
-      console.warn("로컬 저장소 한도 초과:", err);
-    }
-  }
-
   function refreshUI() {
-    populateVendorSelectModal();
     filterAndRender();
-  }
-
-  function confirmResetInitialData() {
-    if (confirm("초기 기본 데이터로 원본 복구하시겠습니까?")) {
-      vendors = JSON.parse(JSON.stringify(defaultVendors));
-      products = JSON.parse(JSON.stringify(defaultProducts));
-      selectedVendorCode = null;
-      selectedVendorCodes.clear();
-      selectedProductCodes.clear();
-      document.getElementById('buyerInput').value = '';
-      document.getElementById('companyInput').value = '';
-      document.getElementById('productInput').value = '';
-      rebuildVendorIndexes();
-      saveData();
-      refreshUI();
-      alert("원본 복구가 완료되었습니다.");
-    }
   }
 
   function filterAndRender() {
@@ -937,9 +1220,7 @@
 
       document.getElementById('companyCountBadge').innerText = '0개사';
       document.getElementById('productCountBadge').innerText = '0건';
-      document.getElementById('statVendorCount').innerText = '-';
-      document.getElementById('statProductCount').innerText = '-';
-      document.getElementById('resultHeaderTitle').innerText = '담당 품목 목록 (대기 중)';
+      document.getElementById('resultHeaderTitle').innerText = '담당 품목 목록';
       document.getElementById('pageInfoSpan').innerText = '바이어 코드를 입력해주세요';
       currentFilteredProducts = [];
       currentFilteredCompanies = [];
@@ -1020,19 +1301,16 @@
     const titleEl = document.getElementById('resultHeaderTitle');
     let titleStr = '';
     if (isAllMode) {
-      titleStr = targetVendorName ? `[전체] ${targetVendorName} 품목` : '전체 품목 목록';
+      titleStr = targetVendorName ? `전체 품목 · ${targetVendorName}` : '전체 품목 목록';
     } else {
       titleStr = targetVendorName 
-        ? `[${rawBuyer}] ${targetVendorName}`
-        : `[${rawBuyer}] 담당 품목 목록`;
+        ? `${rawBuyer} · ${targetVendorName}`
+        : `${rawBuyer} 담당 품목`;
     }
-    if (prodVal) titleStr += ` ('${prodVal}')`;
     titleEl.innerText = titleStr;
 
     document.getElementById('companyCountBadge').innerText = `${currentFilteredCompanies.length.toLocaleString()}개사`;
     document.getElementById('productCountBadge').innerText = `${currentFilteredProducts.length.toLocaleString()}건`;
-    document.getElementById('statVendorCount').innerText = currentFilteredCompanies.length.toLocaleString();
-    document.getElementById('statProductCount').innerText = currentFilteredProducts.length.toLocaleString();
 
     renderFullProductTable();
   }
@@ -1045,8 +1323,8 @@
     allLi.className = `company-item ${selectedVendorCode === null ? 'active' : ''}`;
     allLi.innerHTML = `
       <div onclick="selectCompany(null)" style="flex:1;display:flex;align-items:center;cursor:pointer;">
-        <span style="font-size:15px;margin-right:8px;">🌐</span>
-        <div class="company-name" style="color:var(--primary);font-weight:700;">해당 바이어 전체 품목 보기</div>
+        <span style="font-size:16px;margin-right:10px;">🌐</span>
+        <div class="company-item-name" style="color:var(--primary);font-weight:700;">해당 바이어 전체 품목 보기</div>
       </div>
     `;
     ul.appendChild(allLi);
@@ -1056,25 +1334,20 @@
     currentFilteredCompanies.forEach(v => {
       const li = document.createElement('li');
       const isActive = String(selectedVendorCode) === String(v.code);
-      const isChecked = selectedVendorCodes.has(String(v.code));
-      li.className = `company-item ${isActive ? 'active' : ''} ${isChecked ? 'selected-row' : ''}`;
+      li.className = `company-item ${isActive ? 'active' : ''}`;
       
       const vCount = buyerVendorCounts.get(String(v.code)) || 0;
 
       li.innerHTML = `
-        <div style="display:flex;align-items:center;flex:1;">
-          <input type="checkbox" class="vendor-checkbox" style="margin-right:10px;" ${isChecked ? 'checked' : ''} onclick="event.stopPropagation();" onchange="toggleVendorSelectRow('${v.code}', this.checked)">
-          <div onclick="selectCompany('${v.code}')" style="flex:1;">
-            <div class="company-name">${v.name} <span style="font-size:11.5px;color:var(--primary);font-weight:700;">(${vCount.toLocaleString()})</span></div>
-            <div class="company-code">코드: <strong>${v.code}</strong></div>
-          </div>
+        <div onclick="selectCompany('${v.code}')" style="flex:1;">
+          <div class="company-item-name">${v.name}</div>
+          <div class="company-item-code">${v.code}</div>
         </div>
-        <button class="item-del-btn" title="삭제" onclick="requirePasswordAndExecute(() => deleteVendor('${v.code}'))">✕</button>
+        <span class="company-badge-count">${vCount.toLocaleString()}</span>
       `;
       fragment.appendChild(li);
     });
     ul.appendChild(fragment);
-    updateVendorBatchDeleteUI();
   }
 
   function selectCompany(code) {
@@ -1084,7 +1357,7 @@
       selectedVendorCode = code;
     }
     filterAndRender();
-    // 모바일에서 협력사를 선택했을 때 상단 품목 목록으로 부드럽게 스크롤 이동하여 즉시 결과를 확인하게 배려
+
     if (window.innerWidth <= 960 && code !== null) {
       const prodSection = document.querySelector('.product-section');
       if (prodSection) prodSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1103,7 +1376,7 @@
     if (total === 0) {
       emptyState.style.display = 'block';
       table.style.display = 'none';
-      pageInfoSpan.innerText = '표시 중: 0건';
+      pageInfoSpan.innerText = '일치하는 품목이 없습니다';
       return;
     }
 
@@ -1120,483 +1393,36 @@
       let vNamesHtml = '<span style="color:#94a3b8;font-size:11px;">미지정</span>';
 
       if (p.vendor_codes && p.vendor_codes.length > 0) {
-        vCodesHtml = p.vendor_codes.map(vc => `<span class="v-code">${vc}</span>`).join('');
+        vCodesHtml = p.vendor_codes.map(vc => `<span class="badge-vcode">${vc}</span>`).join('');
         vNamesHtml = p.vendor_codes.map(vc => {
           const v = vendorMap.get(String(vc));
           const vLabel = v ? `${v.name}` : vc;
-          return `<span class="vendor-badge"><b class="mobile-only-badge" style="color:#0f766e;margin-right:3px;">[${vc}]</b>${vLabel}</span>`;
+          return `<span class="badge-vendor"><b class="mobile-buyer-badge" style="color:#0f766e;margin-right:3px;">[${vc}]</b>${vLabel}</span>`;
         }).join('');
       }
 
-      const bCodeHtml = p.buyer_code ? `<span class="b-code">${p.buyer_code}</span>` : '<span style="color:#cbd5e1;font-size:11px;">-</span>';
-      const mobileBuyerBadge = p.buyer_code ? `<span class="b-code mobile-only-badge">바이어: ${p.buyer_code}</span>` : '';
+      const bCodeHtml = p.buyer_code ? `<span class="badge-buyer">${p.buyer_code}</span>` : '<span style="color:#cbd5e1;font-size:11px;">-</span>';
+      const mobileBuyerTag = p.buyer_code ? `<span class="badge-buyer mobile-buyer-badge">바이어: ${p.buyer_code}</span>` : '';
 
       let nameHtml = p.name;
       if (prodVal) {
         const regex = new RegExp(`(${prodVal.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-        nameHtml = nameHtml.replace(regex, '<span style="background:#fef08a;color:#854d0e;font-weight:700;">$1</span>');
+        nameHtml = nameHtml.replace(regex, '<span style="background:#fef08a;color:#854d0e;font-weight:700;padding:0 2px;border-radius:3px;">$1</span>');
       }
 
-      const isChecked = selectedProductCodes.has(String(p.code));
-      if (isChecked) tr.classList.add('selected-row');
-
       tr.innerHTML = `
-        <td class="cell-check" style="text-align:center;"><input type="checkbox" class="row-checkbox" value="${p.code}" ${isChecked ? 'checked' : ''} onchange="toggleSelectRow('${p.code}', this.checked)"></td>
-        <td class="cell-no" style="text-align:center;color:var(--slate-500);">${(idx + 1).toLocaleString()}</td>
-        <td class="cell-code"><span class="p-code">${p.code}</span>${mobileBuyerBadge}</td>
-        <td class="cell-name" style="font-weight:500;">${nameHtml}</td>
+        <td class="cell-no" style="text-align:center;color:var(--slate-400);font-size:12px;">${(idx + 1).toLocaleString()}</td>
+        <td class="cell-code"><span class="badge-code">${p.code}</span>${mobileBuyerTag}</td>
+        <td class="cell-name">${nameHtml}</td>
         <td class="cell-buyer">${bCodeHtml}</td>
         <td class="cell-vcode">${vCodesHtml}</td>
         <td class="cell-vname">${vNamesHtml}</td>
-        <td class="cell-del" style="text-align:center;"><button class="item-del-btn" title="삭제" onclick="requirePasswordAndExecute(() => deleteProduct('${p.code}'))">✕</button></td>
       `;
       fragment.appendChild(tr);
     });
 
     tbody.appendChild(fragment);
-    pageInfoSpan.innerText = `총 ${total.toLocaleString()}건 품목 전체 표시 중`;
-    updateBatchDeleteUI();
-  }
-
-  function toggleSelectRow(code, checked) {
-    if (checked) selectedProductCodes.add(String(code));
-    else selectedProductCodes.delete(String(code));
-    updateBatchDeleteUI();
-  }
-
-  function toggleSelectAll(masterCb) {
-    currentFilteredProducts.forEach(p => {
-      if (masterCb.checked) selectedProductCodes.add(String(p.code));
-      else selectedProductCodes.delete(String(p.code));
-    });
-    document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = masterCb.checked);
-    updateBatchDeleteUI();
-  }
-
-  function updateBatchDeleteUI() {
-    const btn = document.getElementById('batchDeleteBtn');
-    const count = selectedProductCodes.size;
-    document.getElementById('selectedCountSpan').innerText = count.toLocaleString();
-    btn.disabled = count === 0;
-    const masterCb = document.getElementById('selectAllCheckbox');
-    if (currentFilteredProducts.length > 0 && currentFilteredProducts.every(p => selectedProductCodes.has(String(p.code)))) {
-      masterCb.checked = true; masterCb.indeterminate = false;
-    } else if (currentFilteredProducts.some(p => selectedProductCodes.has(String(p.code)))) {
-      masterCb.checked = false; masterCb.indeterminate = true;
-    } else {
-      masterCb.checked = false; masterCb.indeterminate = false;
-    }
-  }
-
-  function deleteSelectedProducts() {
-    const count = selectedProductCodes.size;
-    if (count === 0) return;
-    if (confirm(`선택한 [${count.toLocaleString()}건]의 품목을 삭제하시겠습니까?`)) {
-      products = products.filter(p => !selectedProductCodes.has(String(p.code)));
-      selectedProductCodes.clear();
-      rebuildVendorIndexes();
-      saveData();
-      refreshUI();
-    }
-  }
-
-  function deleteCurrentFilteredProducts() {
-    const count = currentFilteredProducts.length;
-    if (count === 0) return;
-    if (confirm(`현재 화면의 [${count.toLocaleString()}건] 품목을 모두 삭제하시겠습니까?`)) {
-      const delSet = new Set(currentFilteredProducts.map(p => String(p.code)));
-      products = products.filter(p => !delSet.has(String(p.code)));
-      delSet.forEach(c => selectedProductCodes.delete(c));
-      rebuildVendorIndexes();
-      saveData();
-      refreshUI();
-    }
-  }
-
-  function deleteProduct(code) {
-    const target = products.find(p => String(p.code) === String(code));
-    if (confirm(`'${target ? target.name : code}' 품목을 삭제하시겠습니까?`)) {
-      products = products.filter(p => String(p.code) !== String(code));
-      selectedProductCodes.delete(String(code));
-      rebuildVendorIndexes();
-      saveData();
-      refreshUI();
-    }
-  }
-
-  function toggleVendorSelectRow(code, checked) {
-    if (checked) selectedVendorCodes.add(String(code));
-    else selectedVendorCodes.delete(String(code));
-    updateVendorBatchDeleteUI();
-  }
-
-  function toggleSelectAllVendors(masterCb) {
-    currentFilteredCompanies.forEach(v => {
-      if (masterCb.checked) selectedVendorCodes.add(String(v.code));
-      else selectedVendorCodes.delete(String(v.code));
-    });
-    document.querySelectorAll('.vendor-checkbox').forEach(cb => cb.checked = masterCb.checked);
-    updateVendorBatchDeleteUI();
-  }
-
-  function updateVendorBatchDeleteUI() {
-    const btn = document.getElementById('batchDeleteVendorBtn');
-    const count = selectedVendorCodes.size;
-    document.getElementById('selectedVendorCountSpan').innerText = count.toLocaleString();
-    btn.disabled = count === 0;
-  }
-
-  function deleteSelectedVendors() {
-    const count = selectedVendorCodes.size;
-    if (count === 0) return;
-    if (confirm(`선택한 [${count}개] 업체를 일괄 삭제하시겠습니까?\n(해당 협력사에만 연결된 품목의 협력사 정보가 정리됩니다)`)) {
-      vendors = vendors.filter(v => !selectedVendorCodes.has(String(v.code)));
-      products.forEach(p => {
-        p.vendor_codes = (p.vendor_codes || []).filter(vc => !selectedVendorCodes.has(String(vc)));
-      });
-      if (selectedVendorCodes.has(String(selectedVendorCode))) selectedVendorCode = null;
-      selectedVendorCodes.clear();
-      rebuildVendorIndexes();
-      saveData();
-      refreshUI();
-    }
-  }
-
-  function deleteVendor(code) {
-    const target = vendors.find(v => String(v.code) === String(code));
-    if (confirm(`협력사 '${target ? target.name : code}'를 삭제하시겠습니까?`)) {
-      vendors = vendors.filter(v => String(v.code) !== String(code));
-      products.forEach(p => {
-        p.vendor_codes = (p.vendor_codes || []).filter(vc => String(vc) !== String(code));
-      });
-      if (String(selectedVendorCode) === String(code)) selectedVendorCode = null;
-      rebuildVendorIndexes();
-      saveData();
-      refreshUI();
-    }
-  }
-
-  function clearBuyer() {
-    document.getElementById('buyerInput').value = '';
-    document.getElementById('clearBuyerBtn').style.display = 'none';
-    filterAndRender();
-  }
-  function clearCompany() {
-    document.getElementById('companyInput').value = '';
-    document.getElementById('clearCompanyBtn').style.display = 'none';
-    selectedVendorCode = null;
-    filterAndRender();
-  }
-  function clearProduct() {
-    document.getElementById('productInput').value = '';
-    document.getElementById('clearProductBtn').style.display = 'none';
-    filterAndRender();
-  }
-  function resetAllFilters() {
-    document.getElementById('buyerInput').value = '';
-    document.getElementById('companyInput').value = '';
-    document.getElementById('productInput').value = '';
-    document.getElementById('clearBuyerBtn').style.display = 'none';
-    document.getElementById('clearCompanyBtn').style.display = 'none';
-    document.getElementById('clearProductBtn').style.display = 'none';
-    selectedVendorCode = null;
-    selectedProductCodes.clear();
-    selectedVendorCodes.clear();
-    filterAndRender();
-  }
-
-  function openAddProductModal() {
-    document.getElementById('newProdCode').value = '';
-    document.getElementById('newProdName').value = '';
-    document.getElementById('newProdBuyer').value = '';
-    document.getElementById('addProductModal').style.display = 'flex';
-  }
-  function openAddVendorModal() {
-    document.getElementById('newVendorCode').value = '';
-    document.getElementById('newVendorName').value = '';
-    document.getElementById('newVendorKeywords').value = '';
-    document.getElementById('addVendorModal').style.display = 'flex';
-  }
-  function openUploadModal() {
-    document.getElementById('uploadStatusText').style.display = 'none';
-    document.getElementById('fileInput').value = '';
-    document.getElementById('uploadModal').style.display = 'flex';
-  }
-  function closeModal(id) { 
-    const el = document.getElementById(id);
-    if (el) el.style.display = 'none'; 
-  }
-
-  function populateVendorSelectModal() {
-    const sel = document.getElementById('newProdVendor');
-    if (!sel) return;
-    sel.innerHTML = '<option value="">-- 협력사 미지정 --</option>';
-    vendors.forEach(v => sel.innerHTML += `<option value="${v.code}">[${v.code}] ${v.name}</option>`);
-  }
-
-  function saveNewProduct() {
-    const c = (document.getElementById('newProdCode').value || '').trim();
-    const n = (document.getElementById('newProdName').value || '').trim();
-    const b = (document.getElementById('newProdBuyer').value || '').trim();
-    const vc = document.getElementById('newProdVendor').value;
-    if (!c || !n) return alert('제품 코드와 품목명을 모두 입력해주세요.');
-    const ex = products.find(p => String(p.code) === c);
-    if (ex) {
-      ex.name = n;
-      if (b) ex.buyer_code = b;
-      if (vc && !ex.vendor_codes.includes(vc)) ex.vendor_codes.push(vc);
-    } else {
-      products.unshift({ code: c, name: n, buyer_code: b, vendor_codes: vc ? [vc] : [] });
-    }
-    rebuildVendorIndexes();
-    saveData(); closeModal('addProductModal'); refreshUI();
-  }
-
-  function saveNewVendor() {
-    const c = (document.getElementById('newVendorCode').value || '').trim();
-    const n = (document.getElementById('newVendorName').value || '').trim();
-    const k = (document.getElementById('newVendorKeywords').value || '').trim();
-    if (!c || !n) return alert('협력사 코드와 협력사명을 모두 입력해주세요.');
-    if (vendors.some(v => String(v.code) === c)) return alert('이미 등록된 협력사 코드입니다.');
-    const kws = k ? k.split(',').map(s => s.trim()).filter(Boolean) : [];
-    kws.unshift(n.replace(/\(주\)|주식회사|㈜/g, '').trim());
-    vendors.unshift({ code: c, name: n, keywords: kws });
-    rebuildVendorIndexes();
-    saveData(); closeModal('addVendorModal'); refreshUI();
-  }
-
-  function setupDropzone() {
-    const dropzone = document.getElementById('dropzone');
-    const indicator = document.getElementById('globalDragIndicator');
-
-    if (dropzone) {
-      ['dragenter', 'dragover'].forEach(name => {
-        dropzone.addEventListener(name, (e) => {
-          e.preventDefault(); e.stopPropagation();
-          dropzone.classList.add('dragover');
-        });
-      });
-      ['dragleave', 'drop'].forEach(name => {
-        dropzone.addEventListener(name, (e) => {
-          e.preventDefault(); e.stopPropagation();
-          dropzone.classList.remove('dragover');
-        });
-      });
-      dropzone.addEventListener('drop', (e) => {
-        const files = e.dataTransfer ? e.dataTransfer.files : null;
-        if (files && files.length > 0) processUploadedFile(files[0]);
-      });
-    }
-
-    window.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      if (indicator) indicator.style.display = 'flex';
-    });
-    window.addEventListener('dragleave', (e) => {
-      if (e.clientX <= 0 || e.clientY <= 0 || e.clientX >= window.innerWidth || e.clientY >= window.innerHeight) {
-        if (indicator) indicator.style.display = 'none';
-      }
-    });
-    window.addEventListener('drop', (e) => {
-      e.preventDefault();
-      if (indicator) indicator.style.display = 'none';
-      const files = e.dataTransfer ? e.dataTransfer.files : null;
-      if (files && files.length > 0) {
-        requirePasswordAndExecute(() => {
-          openUploadModal();
-          processUploadedFile(files[0]);
-        });
-      }
-    });
-  }
-
-  function handleFileSelect(e) {
-    const f = e.target.files[0];
-    if (f) processUploadedFile(f);
-  }
-
-  function parseRFC4180CSV(text) {
-    const rows = [];
-    let currentRow = [];
-    let currentCell = '';
-    let inQuotes = false;
-    const cleanStr = text.replace(/^\uFEFF/, '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-
-    for (let i = 0; i < cleanStr.length; i++) {
-      const ch = cleanStr[i];
-      const nextCh = cleanStr[i + 1];
-
-      if (ch === '"') {
-        if (inQuotes && nextCh === '"') {
-          currentCell += '"';
-          i++;
-        } else {
-          inQuotes = !inQuotes;
-        }
-      } else if (ch === ',' && !inQuotes) {
-        currentRow.push(currentCell.trim());
-        currentCell = '';
-      } else if (ch === '\n' && !inQuotes) {
-        currentRow.push(currentCell.trim());
-        if (currentRow.some(c => c !== '')) rows.push(currentRow);
-        currentRow = [];
-        currentCell = '';
-      } else {
-        currentCell += ch;
-      }
-    }
-    if (currentCell || currentRow.length > 0) {
-      currentRow.push(currentCell.trim());
-      if (currentRow.some(c => c !== '')) rows.push(currentRow);
-    }
-    return rows;
-  }
-
-  function processUploadedFile(f) {
-    showLoading(`[${f.name}] 파일 분석 및 초고속 색인 중...`);
-
-    setTimeout(() => {
-      const reader = new FileReader();
-      reader.onload = ev => {
-        try {
-          let rows = [];
-          if (f.name.toLowerCase().endsWith('.csv')) {
-            let text = '';
-            try { text = new TextDecoder('utf-8', { fatal: true }).decode(ev.target.result); }
-            catch(err) { text = new TextDecoder('euc-kr').decode(ev.target.result); }
-            rows = parseRFC4180CSV(text);
-          } else {
-            const wb = XLSX.read(new Uint8Array(ev.target.result), { type: 'array' });
-            wb.SheetNames.forEach(sn => {
-              rows = rows.concat(XLSX.utils.sheet_to_json(wb.Sheets[sn], { header: 1, defval: "" }));
-            });
-          }
-
-          if (rows.length < 1) {
-            hideLoading();
-            return alert('유효한 데이터가 없습니다.');
-          }
-
-          const firstRow = rows[0].map(c => String(c).replace(/["\s_]/g, '').toLowerCase());
-          let isHeader = false;
-          let colPCode = -1, colPName = -1, colBCode = -1, colVCode = -1, colVName = -1;
-
-          firstRow.forEach((col, idx) => {
-            if (/^(제품코드|품목코드|상품코드|코드|code)$/.test(col)) { colPCode = idx; isHeader = true; }
-            else if (/^(품목명|제품명|상품명|품명|name)$/.test(col)) { colPName = idx; isHeader = true; }
-            else if (/^(바이어코드|바이어|buyer|buyercode|md|담당자|바이어명)$/.test(col)) { colBCode = idx; isHeader = true; }
-            else if (/^(협력사코드|업체코드|거래처코드|vendorcode)$/.test(col)) { colVCode = idx; isHeader = true; }
-            else if (/^(협력사명|업체명|거래처명|회사명|상호|vendorname)$/.test(col)) { colVName = idx; isHeader = true; }
-          });
-
-          if (!isHeader) {
-            if (rows[0].length >= 5) {
-              colPCode = 1; colPName = 2; colBCode = 3; colVCode = 4; colVName = 5;
-            } else if (rows[0].length === 4) {
-              colPCode = 0; colPName = 1; colVCode = 2; colVName = 3;
-            } else if (rows[0].length === 2) {
-              colPCode = 0; colPName = 1;
-            }
-          }
-
-          const dataRows = isHeader ? rows.slice(1) : rows;
-          let totalProcessed = 0;
-          let addedP = 0, upP = 0;
-
-          const pMap = new Map();
-          products.forEach(p => pMap.set(String(p.code), p));
-
-          dataRows.forEach(r => {
-            const pCode = String(colPCode >= 0 && r[colPCode] !== undefined ? r[colPCode] : '').trim().replace(/\.0$/, '');
-            const pName = String(colPName >= 0 && r[colPName] !== undefined ? r[colPName] : '').trim();
-            const bCode = String(colBCode >= 0 && r[colBCode] !== undefined ? r[colBCode] : '').trim();
-            const vCode = colVCode >= 0 && r[colVCode] !== undefined ? String(r[colVCode]).trim().replace(/\.0$/, '') : '';
-            const vName = colVName >= 0 && r[colVName] !== undefined ? String(r[colVName]).trim() : '';
-
-            if (!pCode || pCode.toLowerCase() === '제품코드' || pCode.toLowerCase() === 'code') return;
-            totalProcessed++;
-
-            if (vCode && vName && !vendorMap.has(vCode)) {
-              const newV = { code: vCode, name: vName, keywords: [vName.replace(/\(주\)|주식회사|㈜/g, '').trim()] };
-              vendors.push(newV);
-              vendorMap.set(vCode, newV);
-            }
-
-            const ex = pMap.get(pCode);
-            if (ex) {
-              if (pName) ex.name = pName;
-              if (bCode) ex.buyer_code = bCode;
-              if (vCode && (!ex.vendor_codes || !ex.vendor_codes.includes(vCode))) {
-                if (!ex.vendor_codes) ex.vendor_codes = [];
-                ex.vendor_codes.push(vCode);
-              }
-              upP++;
-            } else {
-              const newP = {
-                code: pCode,
-                name: pName || ('품목 ' + pCode),
-                buyer_code: bCode,
-                vendor_codes: vCode ? [vCode] : []
-              };
-              products.push(newP);
-              pMap.set(pCode, newP);
-              addedP++;
-            }
-          });
-
-          rebuildVendorIndexes();
-          saveData();
-          closeModal('uploadModal');
-          hideLoading();
-          refreshUI();
-          alert(`초고속 업로드 완료!\n• 처리된 행 수: ${totalProcessed.toLocaleString()}건\n• 신규 품목: ${addedP.toLocaleString()}건 / 갱신: ${upP.toLocaleString()}건\n• 현재 총 고유 품목 수: ${products.length.toLocaleString()}건`);
-        } catch(err) {
-          hideLoading();
-          alert('파일 처리 오류: ' + err.message);
-        }
-      };
-      reader.readAsArrayBuffer(f);
-    }, 50);
-  }
-
-  function downloadSampleCSV() {
-    const sample = "\uFEFF제품코드,품목명,바이어코드,협력사코드,협력사명\n" +
-                   "320249,스윗 부드러운 또띠아 10인치 SPC삼립 50G*12개*10봉,B101,101113,평택물류센터\n" +
-                   "325960,탕종 세사미 베이글 로빈스프렌즈 99G,B101,1102026,로빈스프렌즈 주식회사\n" +
-                   "339002,크랜베리스콘 디엔비 55G*40개,B102,1103568,(주)디엔비\n";
-    const blob = new Blob([sample], { type: 'text/csv;charset=utf-8;' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = "제품검색기_바이어양식_샘플.csv";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  }
-
-  function exportToCSV() {
-    if (currentFilteredProducts.length === 0) return alert('내보낼 데이터가 없습니다. 바이어 코드를 먼저 입력해주세요.');
-    showLoading("CSV 파일을 생성 중입니다...");
-    setTimeout(() => {
-      let csv = "\uFEFFNo,제품코드,품목명,바이어코드,협력사코드,협력사명\n";
-      currentFilteredProducts.forEach((p, idx) => {
-        const vc = (p.vendor_codes || []).join(';');
-        const vn = (p.vendor_codes || []).map(code => {
-          const v = vendorMap.get(String(code));
-          return v ? v.name : code;
-        }).join(';') || '미지정';
-        const cleanName = (p.name || '').replace(/"/g, '""');
-        const bCode = p.buyer_code || '';
-        csv += `${idx + 1},"${p.code}","${cleanName}","${bCode}","${vc}","${vn}"\n`;
-      });
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `제품검색기_품목데이터_${new Date().toISOString().slice(0,10)}.csv`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      hideLoading();
-    }, 50);
+    pageInfoSpan.innerText = `총 ${total.toLocaleString()}개 품목 표시 중`;
   }
 </script>
 </body>
